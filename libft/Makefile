@@ -42,7 +42,9 @@ FT_FILES	:=	ft_isalpha.c			\
 				ft_lstiter.c			\
 				ft_lstmap.c				\
 				ft_countwords.c			\
-				ft_freeall.c
+				ft_freeall.c			\
+				ft_isspace.c			\
+				ft_atoibase.c
 GNL_FILES	:=	get_next_line.c			\
 				get_next_line_utils.c	\
 

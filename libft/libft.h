@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/06 14:29:18 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/05 15:33:31 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/09 18:55:19 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,5 +70,7 @@ char	*get_next_line(int fd);
 
 size_t	ft_countwords(char const s[], char c);
 void	ft_freeall(char **arr);
+int		ft_isspace(char c);
+int		ft_atoibase(char const str[], char const base[]);
 
 #endif

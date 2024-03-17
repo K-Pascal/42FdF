@@ -1,33 +1,52 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   ft_atoibase.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/06 17:41:37 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/09 18:55:45 by pnguyen-         ###   ########.fr       */
+/*   Created: 2024/02/09 18:50:08 by pnguyen-          #+#    #+#             */
+/*   Updated: 2024/02/09 19:14:36 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_atoi(char const nptr[])
+static int	get_basepos(char const base[], char c)
+{
+	char const	*found;
+
+	found = ft_strchr(base, c);
+	if (found == NULL)
+		return (-1);
+	return (found - base);
+}
+
+int	ft_atoibase(char const str[], char const base[])
 {
 	int	sign;
 	int	nb;
+	int	len_base;
+	int	i;
 
 	sign = 1;
 	nb = 0;
-	while (ft_isspace(*nptr))
-		nptr++;
-	if (*nptr == '+' || *nptr == '-')
+	while (ft_isspace(*str))
+		str++;
+	if (*str == '+' || *str == '-')
 	{
-		if (*nptr == '-')
+		if (*str == '-')
 			sign = -1;
-		nptr++;
+		str++;
 	}
-	while (ft_isdigit(*nptr))
-		nb = nb * 10 + *(nptr++) - '0';
+	if (*str == '\0')
+		return (0);
+	len_base = ft_strlen(base);
+	i = get_basepos(base, *str);
+	while (i >= 0)
+	{
+		nb = nb * len_base + i;
+		i = get_basepos(base, *(++str));
+	}
 	return (sign * nb);
 }
