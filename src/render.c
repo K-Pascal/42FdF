@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 15:29:56 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/13 18:39:53 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/14 16:06:41 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 #include "draw_line.h"
 #include "projections.h"
-#include "rotations.h"
+#include "transformations.h"
 #include "typedefs.h"
 #include "utils.h"
 

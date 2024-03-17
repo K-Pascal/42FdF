@@ -1,11 +1,11 @@
-FILES		:=	main.c			\
-				parser.c		\
-				utils.c			\
-				draw_line.c		\
-				rotations.c		\
-				projections.c	\
-				events.c		\
-				render.c		\
+FILES		:=	main.c				\
+				parser.c			\
+				utils.c				\
+				draw_line.c			\
+				transformations.c	\
+				projections.c		\
+				events.c			\
+				render.c			\
 
 SRC_PATH	:=	src
 SRC			:=	$(addprefix $(SRC_PATH)/,$(FILES))

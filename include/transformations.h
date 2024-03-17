@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   rotations.h                                        :+:      :+:    :+:   */
+/*   transformations.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 14:43:23 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/09 17:34:29 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/14 15:55:34 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ROTATION_H
-# define ROTATION_H
+#ifndef TRANSFORMATION_H
+# define TRANSFORMATION_H
 
 # include "typedefs.h"
 
