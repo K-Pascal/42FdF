@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 18:50:46 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/08 21:18:26 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/09 17:42:37 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 #include "libft/libft.h"
 
 #include "draw_line.h"
+#include "rotations.h"
 #include "parser.h"
 #include "projections.h"
 #include "typedefs.h"
@@ -45,12 +46,15 @@ void	render_isometric(t_fdf *fdf)
 			t_vec3 point3d = {
 				j - fdf->map.center.x,
 				i - fdf->map.center.y,
-				fdf->map.altitudes[k] * fdf->map.scale.z
+				fdf->map.altitudes[k]
 			};
-			t_vec3 view;
-			isometric_view(&view, point3d, &fdf->map);
+			t_vec3 transformation;
+			scale(&transformation, point3d, &fdf->map.scale);
+			rotate(&transformation, transformation, &fdf->map.table);
+			isometric_transform(&transformation, transformation, &fdf->map);
+			translate(&transformation, transformation, &fdf->map.translate);
 			t_vec2 projection;
-			orthographic_projection(&projection, fdf, view);
+			orthographic_projection(&projection, fdf, transformation);
 			t_vec2 last_proj;
 			if (j)
 			{
@@ -62,7 +66,7 @@ void	render_isometric(t_fdf *fdf)
 				orthographic_projection(&last_proj, fdf, fdf->map.last_row[j]);
 				draw_line(&fdf->img, last_proj, projection, 0xFFFFFFFF);
 			}
-			last = view;
+			last = transformation;
 			fdf->map.last_row[j] = last;
 			j++;
 			k++;
@@ -93,6 +97,7 @@ int mouse_pressed(int button, int x, int y, t_fdf *fdf)
 	{
 		fdf->map.scale.x *= 1.1f;
 		fdf->map.scale.y *= 1.1f;
+		fdf->map.scale.z *= 1.1f;
 		reset_map(fdf);
 		render_isometric(fdf);
 	}
@@ -100,6 +105,7 @@ int mouse_pressed(int button, int x, int y, t_fdf *fdf)
 	{
 		fdf->map.scale.x *= 0.9f;
 		fdf->map.scale.y *= 0.9f;
+		fdf->map.scale.z *= 0.9f;
 		reset_map(fdf);
 		render_isometric(fdf);
 	}
@@ -109,34 +115,26 @@ int mouse_pressed(int button, int x, int y, t_fdf *fdf)
 int	key_released(int keycode, t_fdf *fdf)
 {
 	if (keycode == 'd')
-	{
-		fdf->transform &= ~K_ROTATE_Y;
-	}
+		fdf->transform &= ~K_D;
 	else if (keycode == 'a')
-	{
-		fdf->transform &= ~K_RROTATE_Y;
-	}
+		fdf->transform &= ~K_A;
 	else if (keycode == 'w')
-	{
-		fdf->transform &= ~K_ROTATE_X;
-	}
+		fdf->transform &= ~K_W;
 	else if (keycode == 's')
-	{
-		fdf->transform &= ~K_RROTATE_X;
-	}
+		fdf->transform &= ~K_S;
 	else if (keycode == 'q')
-	{
-		fdf->transform &= ~K_ROTATE_Z;
-	}
+		fdf->transform &= ~K_Q;
 	else if (keycode == 'e')
-	{
-		fdf->transform &= ~K_RROTATE_Z;
-	}
+		fdf->transform &= ~K_E;
+	else if (keycode == ' ')
+		fdf->transform &= ~K_MOD;
 	return (0);
 }
 
 int	key_pressed(int keycode, t_fdf *fdf)
 {
+	if (!keycode)
+		return (0);
 	if (keycode == XK_Escape)
 		mlx_loop_end(fdf->mlx_ptr);
 	else if (keycode == '0')
@@ -144,45 +142,35 @@ int	key_pressed(int keycode, t_fdf *fdf)
 		fdf->map.table.x = 0;
 		fdf->map.table.y = 0;
 		fdf->map.table.z = 0;
+		if ((fdf->img.width >> 1) <= fdf->map.num_values)
+			fdf->map.scale.x = 1;
+		else
+			fdf->map.scale.x = ((float)(fdf->img.width >> 1) / (float)fdf->map.num_values);
+		if ((fdf->img.height >> 1) <= fdf->map.num_lines)
+			fdf->map.scale.y = 1.f;
+		else
+			fdf->map.scale.y = ((float)(fdf->img.height >> 1) / (float)fdf->map.num_lines);
+		fdf->map.scale.z = 1.f;
+		fdf->map.translate.x = 0.f;
+		fdf->map.translate.y = 0.f;
+		fdf->map.translate.z = 0.f;
 		reset_map(fdf);
 		render_isometric(fdf);
 	}
 	else if (keycode == 'd')
-	{
-		fdf->transform |= K_ROTATE_Y;
-		//fdf->map.pos.x += fdf->map.translation_offset;
-		//reset_map(fdf);
-		//render_isometric(fdf);
-	}
+		fdf->transform |= K_D;
 	else if (keycode == 'a')
-	{
-		fdf->transform |= K_RROTATE_Y;
-		//fdf->map.pos.x -= fdf->map.translation_offset;
-		//reset_map(fdf);
-		//render_isometric(fdf);
-	}
+		fdf->transform |= K_A;
 	else if (keycode == 'w')
-	{
-		fdf->transform |= K_ROTATE_X;
-		//fdf->map.pos.y -= fdf->map.translation_offset;
-		//reset_map(fdf);
-		//render_isometric(fdf);
-	}
+		fdf->transform |= K_W;
 	else if (keycode == 's')
-	{
-		fdf->transform |= K_RROTATE_X;
-		//fdf->map.pos.y += fdf->map.translation_offset;
-		//reset_map(fdf);
-		//render_isometric(fdf);
-	}
+		fdf->transform |= K_S;
 	else if (keycode == 'q')
-	{
-		fdf->transform |= K_ROTATE_Z;
-	}
+		fdf->transform |= K_Q;
 	else if (keycode == 'e')
-	{
-		fdf->transform |= K_RROTATE_Z;
-	}
+		fdf->transform |= K_E;
+	else if (keycode == ' ')
+		fdf->transform |= K_MOD;
 	else if (keycode == XK_Right)
 	{
 		fdf->map.table.y--;
@@ -236,54 +224,58 @@ int	key_pressed(int keycode, t_fdf *fdf)
 
 int update_frame(t_fdf *fdf)
 {
-	if (fdf->transform & K_ROTATE_X)
+	if (!fdf->transform || fdf->transform == K_MOD)
+		return (0);
+	if (fdf->transform & K_W && !(fdf->transform & K_MOD))
 	{
 		fdf->map.table.x--;
 		if (fdf->map.table.x < 0)
 			fdf->map.table.x = SIZE_TRIGO_TABLE - 1;
-		reset_map(fdf);
-		render_isometric(fdf);
 	}
-	if (fdf->transform & K_RROTATE_X)
+	if (fdf->transform & K_S && !(fdf->transform & K_MOD))
 	{
 		fdf->map.table.x++;
 		if (fdf->map.table.x >= SIZE_TRIGO_TABLE)
 			fdf->map.table.x = 0;
-		reset_map(fdf);
-		render_isometric(fdf);
 	}
-	if (fdf->transform & K_ROTATE_Y)
+	if (fdf->transform & K_D && !(fdf->transform & K_MOD))
 	{
 		fdf->map.table.y--;
 		if (fdf->map.table.y < 0)
 			fdf->map.table.y = SIZE_TRIGO_TABLE - 1;
-		reset_map(fdf);
-		render_isometric(fdf);
 	}
-	if (fdf->transform & K_RROTATE_Y)
+	if (fdf->transform & K_A && !(fdf->transform & K_MOD))
 	{
 		fdf->map.table.y++;
 		if (fdf->map.table.y >= SIZE_TRIGO_TABLE)
 			fdf->map.table.y = 0;
-		reset_map(fdf);
-		render_isometric(fdf);
 	}
-	if (fdf->transform & K_ROTATE_Z)
+	if (fdf->transform & K_Q && !(fdf->transform & K_MOD))
 	{
 		fdf->map.table.z--;
 		if (fdf->map.table.z < 0)
 			fdf->map.table.z = SIZE_TRIGO_TABLE - 1;
-		reset_map(fdf);
-		render_isometric(fdf);
 	}
-	if (fdf->transform & K_RROTATE_Z)
+	if (fdf->transform & K_E && !(fdf->transform & K_MOD))
 	{
 		fdf->map.table.z++;
 		if (fdf->map.table.z >= SIZE_TRIGO_TABLE)
 			fdf->map.table.z = 0;
-		reset_map(fdf);
-		render_isometric(fdf);
 	}
+	if (fdf->transform & K_W && fdf->transform & K_MOD)
+		fdf->map.translate.y--;
+	if (fdf->transform & K_S && fdf->transform & K_MOD)
+		fdf->map.translate.y++;
+	if (fdf->transform & K_D && fdf->transform & K_MOD)
+		fdf->map.translate.x++;
+	if (fdf->transform & K_A && fdf->transform & K_MOD)
+		fdf->map.translate.x--;
+	if (fdf->transform & K_Q && fdf->transform & K_MOD)
+		fdf->map.translate.z--;
+	if (fdf->transform & K_E && fdf->transform & K_MOD)
+		fdf->map.translate.z++;
+	reset_map(fdf);
+	render_isometric(fdf);
 	return (0);
 }
 
@@ -456,7 +448,9 @@ int	main(int argc, char **argv)
 	init_mlx(&fdf);
 	fdf.map.pos.x = fdf.img.width >> 1;
 	fdf.map.pos.y = fdf.img.height >> 1;
-	fdf.map.translation_offset = min(fdf.img.width >> 1, fdf.img.height >> 1) >> 5;
+	fdf.map.translate.x = 0;
+	fdf.map.translate.y = 0;
+	fdf.map.translate.z = 0;
 	if ((fdf.img.width >> 1) <= fdf.map.num_values)
 		fdf.map.scale.x = 1;
 	else
@@ -465,7 +459,7 @@ int	main(int argc, char **argv)
 		fdf.map.scale.y = 1.f;
 	else
 		fdf.map.scale.y = ((float)(fdf.img.height >> 1) / (float)fdf.map.num_lines);
-	fdf.map.scale.z = 0.125f;
+	fdf.map.scale.z = 1.f;
 	mlx_loop(fdf.mlx_ptr);
 	deinit_prog(&fdf);
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 14:45:15 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/08 18:04:00 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/09 17:37:11 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,23 +15,20 @@
 
 void	orthographic_projection(t_vec2 *output, t_fdf *fdf, t_vec3 point3d)
 {
-	output->x = point3d.x * fdf->map.scale.x + fdf->map.pos.x;
-	output->y = point3d.y * fdf->map.scale.y + fdf->map.pos.y;
+	output->x = point3d.x + fdf->map.pos.x;
+	output->y = point3d.y + fdf->map.pos.y;
 }
 
-void	isometric_view(t_vec3 *output, t_vec3 input, t_map *map)
+void	isometric_transform(t_vec3 *output, t_vec3 input, t_map *map)
 {
+	(void)map;
 	float const	invsqrt_6 = 0.40825f;
 	float const	sqrt_3 = 1.73205f;
 	float const	sqrt_2 = 1.41421f;
 
-	//input.x = input.x;
 	input.y -= input.z;
 	input.z += input.y;
 	input.y -= input.z;
-	rotate_x(&input, input, &map->table.trigo[map->table.x]);
-	rotate_y(&input, input, &map->table.trigo[map->table.y]);
-	rotate_z(&input, input, &map->table.trigo[map->table.z]);
 	output->x = invsqrt_6 * sqrt_3 * (
 				input.x
 				- input.z);
