@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 18:50:46 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/03/04 18:44:16 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/03/05 14:26:50 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 #include "render.h"
 #include "typedefs.h"
 #include "utils.h"
+
+#define SCALE_Z	5.f
 
 void		reset_configuration(t_fdf *fdf);
 static void	init_scene_data(t_fdf *fdf);
@@ -54,7 +56,7 @@ static void	init_scene_data(t_fdf *fdf)
 		}
 		node = node->next;
 	}
-	fdf->map.scale.z = 5.f;
+	fdf->map.scale.z = SCALE_Z;
 	fdf->transform = K_NONE;
 	fdf->prev_time = 0ll;
 	fdf->map.view_mode = V_ISOM;
