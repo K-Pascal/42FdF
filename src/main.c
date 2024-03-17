@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 18:50:46 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/02 17:14:04 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/05 17:46:38 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,7 +210,18 @@ int	main(int argc, char **argv)
 		return (EXIT_FAILURE);
 	info.num_lines = 0;
 	info.num_values = 0;
-	arr_ints = get_map(argv[1], &info);
+	get_mapinfo(&info, argv[1]);
+	arr_ints = malloc(info.num_lines * info.num_values * sizeof(int));
+	if (arr_ints == NULL)
+	{
+		perror("malloc()");
+		return (EXIT_FAILURE);
+	}
+	if (!get_mapdata(arr_ints, argv[1], &info))
+	{
+		free(arr_ints);
+		return (EXIT_FAILURE);
+	}
 	printf("%zu, %zu\n", info.num_lines, info.num_values);
 	fdf.mlx_ptr = mlx_init();
 	mlx_get_screen_size(fdf.mlx_ptr, &fdf.win.width, &fdf.win.height);
@@ -221,7 +232,7 @@ int	main(int argc, char **argv)
 	fdf.img.data = mlx_get_data_addr(fdf.img.ptr, &fdf.img.bits_per_pixel, &fdf.img.size_line, &fdf.img.endian);
 	printf("%d %d %d\n", fdf.img.bits_per_pixel, fdf.img.size_line, fdf.img.endian);
 
-	draw_box(&fdf.img);
+	//draw_box(&fdf.img);
 	t_vec2	pos = {fdf.img.width / 2, fdf.img.height / 2};
 	//draw_cube(&fdf, pos, 50);
 	//pos.x = 300;
@@ -230,7 +241,7 @@ int	main(int argc, char **argv)
 	   ((info.num_lines - 1) * (fdf.img.height / 2 / info.num_lines)) / 2,
 	   0};
 
-	t_vec2	*last_row = malloc(info.num_values * sizeof(last_row));
+	t_vec2	*last_row = malloc(info.num_values * sizeof(*last_row));
 	for (size_t i = 0; i < info.num_lines; i++)
 	{
 		t_vec2	last;
@@ -239,14 +250,13 @@ int	main(int argc, char **argv)
 			t_vec3 point3d = {
 				j * (fdf.img.width / 2 / info.num_values) - c.x,
 				i * (fdf.img.height / 2 / info.num_lines) - c.y,
-				arr_ints[i * info.num_values + j] * min(fdf.img.width / info.num_values, fdf.img.height / info.num_lines) / 10
+				arr_ints[i * info.num_values + j] * min(fdf.img.width / info.num_values, fdf.img.height / info.num_lines) / 5
 			};
-			//t_vec3 rotated = rotate_z(point3d, M_PI / 4);
-			//rotated = rotate_y(rotated, M_PI / 6);
-			//rotated = rotate_z(rotated, M_PI / 6);
-			t_vec2 projection = isometric_projection(pos, point3d);
+			t_vec3 rotated = rotate_z(point3d, -M_PI / 4);
+			rotated = rotate_x(rotated, -asin(tan(M_PI / 6)));
+			//t_vec2 projection = isometric_projection(pos, point3d);
 			//t_vec2 projection = isometric_projection(pos, rotated);
-			//t_vec2 projection = orthographic_projection(pos, rotated);
+			t_vec2 projection = orthographic_projection(pos, rotated);
 			if (j)
 				draw_line(&fdf.img, &last, &projection);
 			if (i)

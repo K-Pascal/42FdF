@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 16:56:45 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/01/24 14:53:09 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/05 17:47:15 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include "typedefs.h"
 
-t_info	get_info(char const pathname[]);
-int		*get_map(char const pathname[], t_info *info);
+void	get_mapinfo(t_info *info, char const pathname[]);
+char	get_mapdata(int arr_int[], char const pathname[], t_info *info);
 
 #endif
