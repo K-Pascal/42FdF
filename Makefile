@@ -1,11 +1,5 @@
-NAME	:=	fdf
-
-CC	:=	cc
-CFLAGS	:=	-Wall -Wextra -Werror
-GDB	:=	-g3
-export GDB
-
-FILES		:=	main.c
+FILES		:=	main.c			\
+				parser.c		\
 
 SRC_PATH	:=	src
 SRC			:=	$(addprefix $(SRC_PATH)/,$(FILES))
@@ -22,7 +16,13 @@ MLX			:=	mlx
 FT_PATH		:=	libft
 FT			:=	ft
 
-CLIB := -L$(FT_PATH) -l$(FT) -L$(MLX_PATH) -l$(MLX) -lXext -lX11
+NAME	:=	fdf
+
+CC		:=	cc
+CFLAGS	:=	-Wall -Wextra -Werror
+GDB		:=	-g3
+export GDB
+CLIB	:=	-L$(FT_PATH) -l$(FT) -L$(MLX_PATH) -l$(MLX) -lXext -lX11 -lm
 
 .PHONY: all
 all: $(NAME)
