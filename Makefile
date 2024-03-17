@@ -4,6 +4,8 @@ FILES		:=	main.c			\
 				draw_line.c		\
 				rotations.c		\
 				projections.c	\
+				events.c		\
+				render.c		\
 
 SRC_PATH	:=	src
 SRC			:=	$(addprefix $(SRC_PATH)/,$(FILES))
@@ -49,15 +51,17 @@ $(OBJ_PATH)/%.o: $(SRC_PATH)/%.c | $(OBJ_PATH)
 $(OBJ_PATH):
 	mkdir -p $@
 
-.PHONY: clean fclean re norm
+.PHONY: clean fclean cleanlib re norm
 clean:
 	rm -f $(OBJ)
 	rm -f $(DEPS)
 
 fclean: clean
-	make clean -C $(MLX_PATH)
 	make fclean -C $(FT_PATH)
 	rm -f $(NAME)
+
+cleanlib:
+	make clean -C $(MLX_PATH)
 
 re: fclean all
 

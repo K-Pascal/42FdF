@@ -1,24 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.h                                            :+:      :+:    :+:   */
+/*   events.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/25 17:52:44 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/13 15:25:25 by pnguyen-         ###   ########.fr       */
+/*   Created: 2024/02/13 15:26:27 by pnguyen-          #+#    #+#             */
+/*   Updated: 2024/02/13 15:30:11 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef UTILS_H
-# define UTILS_H
+#ifndef EVENTS_H
+# define EVENTS_H
 
-#include "typedefs.h"
+# include "typedefs.h"
 
-void	put_pixel(t_img	*img, int x, int y, int color);
-void	init_trigo_table(t_trigo_table *table);
-int		min(int a, int b);
-int		my_abs(int nb);
-void	reset_map(t_fdf *fdf);
+int mouse_pressed(int button, int x, int y, t_fdf *fdf);
+int	key_released(int keycode, t_fdf *fdf);
+int	key_pressed(int keycode, t_fdf *fdf);
 
 #endif

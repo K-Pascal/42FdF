@@ -6,11 +6,14 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 17:51:54 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/08 13:47:17 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/13 15:41:30 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <math.h>
+
+#include "libft/libft.h"
+#include "minilibx-linux/mlx.h"
 
 #include "typedefs.h"
 
@@ -48,4 +51,17 @@ int	min(int a, int b)
 	if (a < b)
 		return (a);
 	return (b);
+}
+
+int	my_abs(int nb)
+{
+	if (nb < 0)
+		return (-nb);
+	return (nb);
+}
+
+void	reset_map(t_fdf *fdf)
+{
+	ft_bzero(fdf->img.data, fdf->img.size_line * fdf->img.height);
+	mlx_clear_window(fdf->mlx_ptr, fdf->win.ptr);
 }

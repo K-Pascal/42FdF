@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 16:54:41 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/12 19:27:12 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/13 15:04:54 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,8 +90,9 @@ typedef enum e_transform
 	K_A = (1u << 3),
 	K_Q = (1u << 4),
 	K_E = (1u << 5),
-	K_MOVE = (1u << 6),
-	K_MOD = (1u << 7)
+	K_MINUS = (1u << 6),
+	K_EQUAL = (1u << 7),
+	K_MOD = (1u << 8)
 }	t_transform;
 
 typedef struct s_fdf
