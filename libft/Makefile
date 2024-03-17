@@ -88,4 +88,4 @@ re: fclean all
 .PHONY: norm
 norm:
 	norminette -R CheckForbiddenSourceHeader $(FT_SRC) $(GNL_SRC)
-	norminette -R CheckDefine libft.h
+	norminette -R CheckDefine libft.h gnl/get_next_line.h
