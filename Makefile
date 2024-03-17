@@ -38,18 +38,14 @@ CLIB	:=	-L$(FT_PATH) -L$(MLX_PATH) -l$(FT) -l$(MLX) -lXext -lX11 -lm
 .PHONY: all
 all: $(NAME)
 
-$(NAME): $(MLX_PATH)/lib$(MLX).a $(FT_PATH)/lib$(FT).a $(OBJ)
+$(NAME): $(OBJ)
+	make --silent -C $(MLX_PATH)
+	make --silent -C $(FT_PATH)
 	$(CC) $(CFLAGS) $(GDB) $(CINC) $(OBJ) -o $@ $(CLIB)
-
-$(MLX_PATH)/lib$(MLX).a:
-	make -C $(MLX_PATH)
-
-$(FT_PATH)/lib$(FT).a:
-	make -C $(FT_PATH)
 
 -include $(DEPS)
 
-$(OBJ_PATH)/%.o: $(SRC_PATH)/%.c | $(OBJ_PATH)
+$(OBJ_PATH)/%.o: $(SRC_PATH)/%.c Makefile | $(OBJ_PATH)
 	$(CC) $(CFLAGS) $(GDB) $(CINC) -MMD -MP -c $< -o $@
 
 $(OBJ_PATH):
@@ -61,11 +57,10 @@ clean:
 	rm -f $(DEPS)
 
 fclean: clean
-	make fclean -C $(FT_PATH)
 	rm -f $(NAME)
 
 cleanlib:
-	make clean -C $(MLX_PATH)
+	make fclean -C $(FT_PATH)
 
 re: fclean all
 
