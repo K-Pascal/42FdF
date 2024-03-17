@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/09 18:50:08 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/09 19:14:36 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/16 19:57:31 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ static int	get_basepos(char const base[], char c)
 {
 	char const	*found;
 
+	if (c == '\0')
+		return (-1);
 	found = ft_strchr(base, c);
 	if (found == NULL)
 		return (-1);
@@ -42,11 +44,11 @@ int	ft_atoibase(char const str[], char const base[])
 	if (*str == '\0')
 		return (0);
 	len_base = ft_strlen(base);
-	i = get_basepos(base, *str);
+	i = get_basepos(base, *(str++));
 	while (i >= 0)
 	{
 		nb = nb * len_base + i;
-		i = get_basepos(base, *(++str));
+		i = get_basepos(base, *(str++));
 	}
 	return (sign * nb);
 }
