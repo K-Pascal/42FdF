@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 15:20:33 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/14 15:50:58 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/14 16:08:37 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,13 @@
 
 int	mouse_pressed(int button, int x, int y, t_fdf *fdf)
 {
-	(void)x;
-	(void)y;
+	if (button == Button1)
+	{
+		fdf->map.pos.x = x;
+		fdf->map.pos.y = y;
+		reset_map(fdf);
+		render(fdf);
+	}
 	if (button == Button4)
 	{
 		fdf->map.scale.x *= 1.1f;
