@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 16:12:35 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/05 19:53:13 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/06 16:28:24 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 
 #include "typedefs.h"
 
-static char	parse_mapinfo(t_info *info, int fd)
+static char	parse_mapinfo(t_map *info, int fd)
 {
 	char	*str;
 
@@ -70,14 +70,14 @@ static char	store_mapvalue(int arr_ints[], char str[])
 	return (1);
 }
 
-static char	parse_mapdata(int arr_ints[], int fd, t_info *info)
+static char	parse_mapdata(t_map *map, int fd)
 {
 	size_t	i;
 	char	*str;
 	char	status;
 
 	i = 0;
-	while (i < info->num_lines)
+	while (i < map->num_lines)
 	{
 		str = get_next_line(fd);
 		if (str == NULL)
@@ -88,7 +88,7 @@ static char	parse_mapdata(int arr_ints[], int fd, t_info *info)
 				ft_putendl_fd("Incomplete map !", STDERR_FILENO);
 			return (0);
 		}
-		status = store_mapvalue(&arr_ints[i * info->num_values], str);
+		status = store_mapvalue(&map->altitudes[i * map->num_values], str);
 		free(str);
 		if (!status)
 			return (0);
@@ -97,7 +97,7 @@ static char	parse_mapdata(int arr_ints[], int fd, t_info *info)
 	return (1);
 }
 
-void	get_mapinfo(t_info *info, char const pathname[])
+void	get_mapinfo(t_map *info, char const pathname[])
 {
 	int		fd;
 	char	status;
@@ -115,7 +115,7 @@ void	get_mapinfo(t_info *info, char const pathname[])
 		exit(EXIT_FAILURE);
 }
 
-char	get_mapdata(int arr_ints[], char const pathname[], t_info *info)
+char	get_mapdata(t_map *map, char const pathname[])
 {
 	int		fd;
 	char	status;
@@ -126,7 +126,7 @@ char	get_mapdata(int arr_ints[], char const pathname[], t_info *info)
 		perror(pathname);
 		exit(EXIT_FAILURE);
 	}
-	status = parse_mapdata(arr_ints, fd, info);
+	status = parse_mapdata(map, fd);
 	if (close(fd) == -1)
 		perror("get_mapdata():close()");
 	return (status);

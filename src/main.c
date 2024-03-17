@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 18:50:46 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/06 15:50:51 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/07 16:24:15 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,49 @@
 #include "typedefs.h"
 #include "utils.h"
 
+void	render_isometric(t_fdf *fdf)
+{
+	size_t	i;
+	size_t	j;
+	t_vec3	c;
+
+	c.x = ((fdf->map.num_values - 1) * ((fdf->img.width >> 1) / fdf->map.num_values)) / 2;
+	c.y = ((fdf->map.num_lines - 1) * ((fdf->img.height >> 1) / fdf->map.num_lines)) / 2;
+	c.z = 0;
+	t_vec2	*last_row = malloc(fdf->map.num_values * sizeof(*last_row));
+	if (last_row == NULL)
+		return ;
+	i = 0;
+	while (i < fdf->map.num_lines)
+	{
+		t_vec2	last;
+		j = 0;
+		while (j < fdf->map.num_values)
+		{
+			t_vec3 point3d = {
+				j * (fdf->img.width / 2 / fdf->map.num_values) - c.x,
+				i * (fdf->img.height / 2 / fdf->map.num_lines) - c.y,
+				fdf->map.altitudes[i * fdf->map.num_values + j] * min(fdf->img.width / fdf->map.num_values, fdf->img.height / fdf->map.num_lines) / 10
+			};
+			t_vec2 projection = isometric_projection(fdf->map.pos, point3d, &fdf->map);
+			if (j)
+				draw_line(&fdf->img, last, projection);
+			if (i)
+				draw_line(&fdf->img, last_row[j], projection);
+			last = projection;
+			last_row[j] = last;
+			j++;
+		}
+		i++;
+	}
+	free(last_row);
+	mlx_put_image_to_window(fdf->mlx_ptr, fdf->win.ptr, fdf->img.ptr, 0, 0);
+}
+
+
 int	close_mlx(t_fdf *fdf)
 {
+	free(fdf->map.altitudes);
 	mlx_destroy_image(fdf->mlx_ptr, fdf->img.ptr);
 	mlx_destroy_window(fdf->mlx_ptr, fdf->win.ptr);
 	mlx_destroy_display(fdf->mlx_ptr);
@@ -38,15 +79,78 @@ int	close_mlx(t_fdf *fdf)
 	return (0);
 }
 
+void	reset_map(t_fdf *fdf)
+{
+	ft_memset(fdf->img.data, 0, fdf->img.size_line * fdf->img.height);
+	mlx_clear_window(fdf->mlx_ptr, fdf->win.ptr);
+}
+
 int	key_pressed(int keycode, t_fdf *fdf)
 {
 	if (keycode == XK_Escape)
-	{
 		close_mlx(fdf);
-	}
-	if (keycode == 'a')
+	else if (keycode == '0')
 	{
-		ft_putendl_fd("test", STDOUT_FILENO);
+		reset_map(fdf);
+		fdf->map.table.x = 0;
+		fdf->map.table.y = 0;
+		render_isometric(fdf);
+	}
+	else if (keycode == 'd')
+	{
+		fdf->map.pos.x += fdf->map.translation_offset;
+		reset_map(fdf);
+		render_isometric(fdf);
+	}
+	else if (keycode == 'a')
+	{
+		fdf->map.pos.x -= fdf->map.translation_offset;
+		reset_map(fdf);
+		render_isometric(fdf);
+	}
+	else if (keycode == 'w')
+	{
+		fdf->map.pos.y -= fdf->map.translation_offset;
+		reset_map(fdf);
+		render_isometric(fdf);
+	}
+	else if (keycode == 's')
+	{
+		fdf->map.pos.y += fdf->map.translation_offset;
+		reset_map(fdf);
+		render_isometric(fdf);
+	}
+	else if (keycode == XK_Right)
+	{
+		fdf->map.table.y--;
+		if (fdf->map.table.y < 0)
+			fdf->map.table.y = SIZE_TRIGO_TABLE - 1;
+		reset_map(fdf);
+		render_isometric(fdf);
+	}
+	else if (keycode == XK_Left)
+	{
+		fdf->map.table.y++;
+		if (fdf->map.table.y >= SIZE_TRIGO_TABLE)
+			fdf->map.table.y = 0;
+		reset_map(fdf);
+		render_isometric(fdf);
+	}
+	else if (keycode == XK_Up)
+	{
+		fdf->map.table.x--;
+		if (fdf->map.table.x < 0)
+			fdf->map.table.x = SIZE_TRIGO_TABLE - 1;
+		reset_map(fdf);
+		render_isometric(fdf);
+	}
+	else if (keycode == XK_Down)
+	{
+		fdf->map.table.x++;
+		if (fdf->map.table.x >= SIZE_TRIGO_TABLE)
+			fdf->map.table.x = 0;
+		reset_map(fdf);
+		render_isometric(fdf);
 	}
 	return (0);
 }
@@ -130,81 +234,73 @@ int	key_pressed(int keycode, t_fdf *fdf)
 //	}
 //}
 
-int	min(int a, int b)
+char	start_mlx(t_fdf *fdf)
 {
-	if (a < b)
-		return (a);
-	return (b);
+	fdf->mlx_ptr = mlx_init();
+	if (fdf->mlx_ptr == NULL)
+		return (0);
+	mlx_get_screen_size(fdf->mlx_ptr, &fdf->win.width, &fdf->win.height);
+	fdf->win.ptr = mlx_new_window(fdf->mlx_ptr, fdf->win.width, fdf->win.height, "FdF");
+	if (fdf->win.ptr == NULL)
+	{
+		mlx_destroy_display(fdf->mlx_ptr);
+		free(fdf->mlx_ptr);
+		return (0);
+	}
+	fdf->img.width = fdf->win.width;
+	fdf->img.height = fdf->win.height;
+	fdf->img.ptr = mlx_new_image(fdf->mlx_ptr, fdf->img.width, fdf->img.height);
+	if (fdf->img.ptr == NULL)
+	{
+		mlx_destroy_window(fdf->mlx_ptr, fdf->win.ptr);
+		mlx_destroy_display(fdf->mlx_ptr);
+		free(fdf->mlx_ptr);
+		return (0);
+	}
+	return (1);
+}
+
+void	init_prog(t_fdf *fdf, char pathname[])
+{
+	fdf->map.num_lines = 0;
+	fdf->map.num_values = 0;
+	get_mapinfo(&fdf->map, pathname);
+	fdf->map.altitudes = malloc(fdf->map.num_lines * fdf->map.num_values * sizeof(int));
+	if (fdf->map.altitudes == NULL)
+	{
+		perror("malloc()");
+		exit(EXIT_FAILURE);
+	}
+	if (!get_mapdata(&fdf->map, pathname))
+	{
+		free(fdf->map.altitudes);
+		exit(EXIT_FAILURE);
+	}
+	if (!start_mlx(fdf))
+	{
+		ft_putendl_fd("Failed to initialize mlx", STDERR_FILENO);
+		free(fdf->map.altitudes);
+		exit(EXIT_FAILURE);
+	}
+	fdf->img.data = mlx_get_data_addr(fdf->img.ptr, &fdf->img.bytes_per_pixel,
+			&fdf->img.size_line, &fdf->img.endian);
+	fdf->img.bytes_per_pixel >>= 3;
 }
 
 int	main(int argc, char **argv)
 {
 	t_fdf	fdf;
-	t_info	info;
-	int		*arr_ints;
 
-	if (argc < 2)
+	if (argc != 2)
 		return (EXIT_FAILURE);
-	info.num_lines = 0;
-	info.num_values = 0;
-	get_mapinfo(&info, argv[1]);
-	arr_ints = malloc(info.num_lines * info.num_values * sizeof(int));
-	if (arr_ints == NULL)
-	{
-		perror("malloc()");
-		return (EXIT_FAILURE);
-	}
-	if (!get_mapdata(arr_ints, argv[1], &info))
-	{
-		free(arr_ints);
-		return (EXIT_FAILURE);
-	}
-	printf("%zu, %zu\n", info.num_lines, info.num_values);
-	fdf.mlx_ptr = mlx_init();
-	mlx_get_screen_size(fdf.mlx_ptr, &fdf.win.width, &fdf.win.height);
-	fdf.win.ptr = mlx_new_window(fdf.mlx_ptr, fdf.win.width, fdf.win.height, "test");
-	fdf.img.width = fdf.win.width;
-	fdf.img.height = fdf.win.height;
-	fdf.img.ptr = mlx_new_image(fdf.mlx_ptr, fdf.img.width, fdf.img.height);
-	fdf.img.data = mlx_get_data_addr(fdf.img.ptr, &fdf.img.bits_per_pixel, &fdf.img.size_line, &fdf.img.endian);
-	printf("%d %d %d\n", fdf.img.bits_per_pixel, fdf.img.size_line, fdf.img.endian);
-
-	//draw_box(&fdf.img);
-	t_vec2	pos = {fdf.img.width / 2, fdf.img.height / 2};
-	//draw_cube(&fdf, pos, 50);
-	//pos.x = 300;
-//	draw_cube(&fdf, pos, 50);
-	t_vec3	c = {((info.num_values - 1) * (fdf.img.width / 2 / info.num_values)) / 2,
-	   ((info.num_lines - 1) * (fdf.img.height / 2 / info.num_lines)) / 2,
-	   0};
-
-	t_vec2	*last_row = malloc(info.num_values * sizeof(*last_row));
-	for (size_t i = 0; i < info.num_lines; i++)
-	{
-		t_vec2	last;
-		for (size_t j = 0; j < info.num_values; j++)
-		{
-			t_vec3 point3d = {
-				j * (fdf.img.width / 2 / info.num_values) - c.x,
-				i * (fdf.img.height / 2 / info.num_lines) - c.y,
-				arr_ints[i * info.num_values + j] * min(fdf.img.width / info.num_values, fdf.img.height / info.num_lines) / 10
-			};
-//			t_vec3 rotated = rotate_z(point3d, -M_PI / 4);
-//			rotated = rotate_x(rotated, -M_PI / 6);
-			t_vec2 projection = isometric_projection(pos, point3d);
-			//t_vec2 projection = isometric_projection(pos, rotated);
-//			t_vec2 projection = orthographic_projection(pos, rotated);
-			if (j)
-				draw_line(&fdf.img, last, projection);
-			if (i)
-				draw_line(&fdf.img, last_row[j], projection);
-			last = projection;
-			last_row[j] = last;
-		}
-	}
-	free(last_row);
-	free(arr_ints);
-	mlx_put_image_to_window(fdf.mlx_ptr, fdf.win.ptr, fdf.img.ptr, 0, 0);
+	init_prog(&fdf, argv[1]);
+	fdf.map.pos.x = fdf.img.width >> 1;
+	fdf.map.pos.y = fdf.img.height >> 1;
+	fdf.map.translation_offset = min(fdf.img.width >> 1, fdf.img.height >> 1) / 50;
+	init_trigo_table(fdf.map.table.trigo);
+	fdf.map.table.x = 0;
+	fdf.map.table.y = 0;
+	fdf.map.table.z = 0;
 	mlx_hook(fdf.win.ptr, KeyPress, KeyPressMask, &key_pressed, &fdf);
 	mlx_hook(fdf.win.ptr, DestroyNotify, NoEventMask, &close_mlx, &fdf);
 	mlx_loop(fdf.mlx_ptr);

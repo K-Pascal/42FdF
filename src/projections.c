@@ -6,10 +6,11 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 14:45:15 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/06 14:45:44 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/06 20:01:33 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "rotations.h"
 #include "typedefs.h"
 
 t_vec2	orthographic_projection(t_vec2 pos, t_vec3 point3d)
@@ -21,7 +22,7 @@ t_vec2	orthographic_projection(t_vec2 pos, t_vec3 point3d)
 	return (projection);
 }
 
-t_vec2	isometric_projection(t_vec2 pos, t_vec3 point3d)
+t_vec2	isometric_projection(t_vec2 pos, t_vec3 point3d, t_map *map)
 {
 	float const	invsqrt_6 = 0.408248f;
 	float const	sqrt_3 = 1.732051f;
@@ -32,19 +33,18 @@ t_vec2	isometric_projection(t_vec2 pos, t_vec3 point3d)
 	point3d.y -= point3d.z;
 	point3d.z += point3d.y;
 	point3d.y -= point3d.z;
-	rotated.x = (int)(invsqrt_6 * sqrt_3 * (
-						(float)point3d.x
-					- (float)point3d.z));
-	rotated.y = (int)(invsqrt_6 * (
-						(float)point3d.x
-					+ (float)(point3d.y << 1)
-					+ (float)point3d.z));
-	rotated.z = (int)(invsqrt_6 * sqrt_2 * (
-						(float)point3d.x
-					- (float)point3d.y
-					+ (float)point3d.z));
+	point3d = rotate_x(point3d, map->table.trigo[map->table.x]);
+	point3d = rotate_y(point3d, map->table.trigo[map->table.y]);
+	point3d = rotate_z(point3d, map->table.trigo[map->table.z]);
+	rotated.x = (int)(invsqrt_6 * sqrt_3 * ((float)point3d.x
+				- (float)point3d.z));
+	rotated.y = (int)(invsqrt_6 * ((float)point3d.x
+				+ (float)(point3d.y << 1)
+				+ (float)point3d.z));
+	rotated.z = (int)(invsqrt_6 * sqrt_2 * ((float)point3d.x
+				- (float)point3d.y
+				+ (float)point3d.z));
 	pos.x += rotated.x;
 	pos.y += rotated.y;
 	return (pos);
 }
-
