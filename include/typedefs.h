@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 16:54:41 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/07 19:50:19 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/08 18:10:04 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ typedef struct s_vec2
 
 typedef struct s_vec3
 {
-	int	x;
-	int	y;
-	int	z;
+	float	x;
+	float	y;
+	float	z;
 }	t_vec3;
 
 typedef struct s_img
@@ -70,7 +70,9 @@ typedef struct s_map
 	t_vec2			pos;
 	int				translation_offset;
 	t_trigo_table	table;
-	int				z_normalize;
+	t_vec3			scale;
+	t_vec3			center;
+	t_vec3			*last_row;
 }	t_map;
 
 typedef struct s_fdf

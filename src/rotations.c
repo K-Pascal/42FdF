@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 14:41:59 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/07 15:36:49 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/08 15:42:29 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,32 +14,23 @@
 
 #include "typedefs.h"
 
-t_vec3	rotate_x(t_vec3 point3d, t_trigo trigo)
+void	rotate_x(t_vec3 *rotated, t_vec3 input, t_trigo *trigo)
 {
-	t_vec3	rotated;
-
-	rotated.x = point3d.x;
-	rotated.y = (int)((float)point3d.y * trigo.cos + (float)point3d.z * trigo.sin);
-	rotated.z = (int)(-(float)point3d.y * trigo.sin + (float)point3d.z * trigo.cos);
-	return (rotated);
+	rotated->x = input.x;
+	rotated->y = input.y * trigo->cos + input.z * trigo->sin;
+	rotated->z = -input.y * trigo->sin + input.z * trigo->cos;
 }
 
-t_vec3	rotate_y(t_vec3 point3d, t_trigo trigo)
+void	rotate_y(t_vec3 *rotated, t_vec3 input, t_trigo *trigo)
 {
-	t_vec3	rotated;
-
-	rotated.x = (int)((float)point3d.x * trigo.cos - (float)point3d.z * trigo.sin);
-	rotated.y = point3d.y;
-	rotated.z = (int)((float)point3d.x * trigo.sin + (float)point3d.z * trigo.cos);
-	return (rotated);
+	rotated->x = input.x * trigo->cos - input.z * trigo->sin;
+	rotated->y = input.y;
+	rotated->z = input.x * trigo->sin + input.z * trigo->cos;
 }
 
-t_vec3	rotate_z(t_vec3 point3d, t_trigo trigo)
+void	rotate_z(t_vec3 *rotated, t_vec3 input, t_trigo *trigo)
 {
-	t_vec3	rotated;
-
-	rotated.x = (int)((float)point3d.x * trigo.cos - (float)point3d.y * trigo.sin);
-	rotated.y = (int)((float)point3d.x * trigo.sin + (float)point3d.y * trigo.cos);
-	rotated.z = point3d.z;
-	return (rotated);
+	rotated->x = input.x * trigo->cos - input.y * trigo->sin;
+	rotated->y = input.x * trigo->sin + input.y * trigo->cos;
+	rotated->z = input.z;
 }

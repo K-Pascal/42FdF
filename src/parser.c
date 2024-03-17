@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 16:12:35 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/07 19:46:49 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/08 18:42:11 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,11 +108,19 @@ void	get_mapinfo(t_map *info, char const pathname[])
 		perror(pathname);
 		exit(EXIT_FAILURE);
 	}
+	info->num_lines = 0;
+	info->num_values = 0;
 	status = parse_mapinfo(info, fd);
 	if (close(fd) == -1)
 		perror("get_mapinfo():close()");
 	if (!status)
 		exit(EXIT_FAILURE);
+	info->altitudes = malloc(info->num_lines * info->num_values * sizeof(int));
+	if (info->altitudes == NULL)
+	{
+		perror("malloc()");
+		exit(EXIT_FAILURE);
+	}
 }
 
 char	get_mapdata(t_map *map, char const pathname[])
