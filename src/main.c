@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 18:50:46 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/07 20:34:11 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/08 14:09:17 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,18 +78,6 @@ void	render_isometric(t_fdf *fdf)
 	mlx_put_image_to_window(fdf->mlx_ptr, fdf->win.ptr, fdf->img.ptr, 0, 0);
 }
 
-
-int	close_mlx(t_fdf *fdf)
-{
-	free(fdf->map.altitudes);
-	mlx_destroy_image(fdf->mlx_ptr, fdf->img.ptr);
-	mlx_destroy_window(fdf->mlx_ptr, fdf->win.ptr);
-	mlx_destroy_display(fdf->mlx_ptr);
-	free(fdf->mlx_ptr);
-	exit(EXIT_SUCCESS);
-	return (0);
-}
-
 void	reset_map(t_fdf *fdf)
 {
 	ft_memset(fdf->img.data, 0, fdf->img.size_line * fdf->img.height);
@@ -98,8 +86,9 @@ void	reset_map(t_fdf *fdf)
 
 int	key_pressed(int keycode, t_fdf *fdf)
 {
+	printf("%d\n", keycode);
 	if (keycode == XK_Escape)
-		close_mlx(fdf);
+		mlx_loop_end(fdf->mlx_ptr);
 	else if (keycode == '0')
 	{
 		reset_map(fdf);
@@ -312,6 +301,16 @@ void	init_prog(t_fdf *fdf, char pathname[])
 	fdf->img.data = mlx_get_data_addr(fdf->img.ptr, &fdf->img.bytes_per_pixel,
 			&fdf->img.size_line, &fdf->img.endian);
 	fdf->img.bytes_per_pixel >>= 3;
+	init_trigo_table(&fdf->map.table);
+}
+
+void	deinit_prog(t_fdf *fdf)
+{
+	free(fdf->map.altitudes);
+	mlx_destroy_image(fdf->mlx_ptr, fdf->img.ptr);
+	mlx_destroy_window(fdf->mlx_ptr, fdf->win.ptr);
+	mlx_destroy_display(fdf->mlx_ptr);
+	free(fdf->mlx_ptr);
 }
 
 int	main(int argc, char **argv)
@@ -324,15 +323,10 @@ int	main(int argc, char **argv)
 	fdf.map.pos.x = fdf.img.width >> 1;
 	fdf.map.pos.y = fdf.img.height >> 1;
 	fdf.map.translation_offset = min(fdf.img.width >> 1, fdf.img.height >> 1) / 50;
-	init_trigo_table(fdf.map.table.trigo);
-	fdf.map.table.x = 0;
-	fdf.map.table.y = 0;
-	fdf.map.table.z = 0;
 	fdf.map.z_normalize = 1;
-	printf("%d %d %d %d\n", (fdf.img.width >> 1), fdf.map.num_values, (fdf.img.height >> 1), fdf.map.num_lines);
-	mlx_hook(fdf.win.ptr, KeyPress, KeyPressMask, &key_pressed, &fdf);
-	mlx_hook(fdf.win.ptr, DestroyNotify, NoEventMask, &close_mlx, &fdf);
+	mlx_hook(fdf.win.ptr, KeyPress, KeyPressMask, key_pressed, &fdf);
+	mlx_hook(fdf.win.ptr, DestroyNotify, NoEventMask, &mlx_loop_end, fdf.mlx_ptr);
 	mlx_loop(fdf.mlx_ptr);
-	close_mlx(&fdf);
+	deinit_prog(&fdf);
 	return (0);
 }
