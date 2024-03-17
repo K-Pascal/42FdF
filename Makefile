@@ -9,6 +9,7 @@ FILES		:=	main.c				\
 				events.c			\
 				events_utils.c		\
 				render.c			\
+				matrix.c			\
 
 SRC_PATH	:=	src
 SRC			:=	$(addprefix $(SRC_PATH)/,$(FILES))

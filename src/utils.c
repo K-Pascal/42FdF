@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 17:51:54 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/16 19:57:56 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/29 14:25:31 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,15 +60,19 @@ void	init_mapdata(t_fdf *fdf, char pathname[])
 	int		i;
 
 	get_mapinfo(&fdf->map, pathname);
-	fdf->map.last_row = malloc(fdf->map.num_values * sizeof(t_vec3));
+	fdf->map.last_row = malloc(fdf->map.num_values * sizeof(t_vec2));
 	if (fdf->map.last_row == NULL)
 	{
 		perror("init_mapdata():malloc()");
 		ft_lstclear(&(fdf->map.data), &free);
 		exit(EXIT_FAILURE);
 	}
-	fdf->map.center.x = (float)(fdf->map.num_values) / 2.f;
-	fdf->map.center.y = (float)(fdf->map.num_lines) / 2.f;
+	if (SIZE_TRIGO_TABLE <= 4)
+		fdf->map.angle_offset = 1;
+	else
+		fdf->map.angle_offset = SIZE_TRIGO_TABLE / 2;
+	fdf->map.center.x = (float)(fdf->map.num_values - 1) / 2.f;
+	fdf->map.center.y = (float)(fdf->map.num_lines - 1) / 2.f;
 	center_z = 0.f;
 	current = fdf->map.data;
 	while (current != NULL)

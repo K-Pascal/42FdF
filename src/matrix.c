@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 11:09:13 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/22 16:11:56 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/29 19:53:29 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,22 +30,6 @@ t_mat4x4	mat_mult_mat(t_mat4x4 left, t_mat4x4 right)
 				+ left.m[j][3] * right.m[3][i];
 			j++;
 		}
-	//	output.m[0][i] = left.m[0][0] * right.m[0][i]
-	//		+ left.m[0][1] * right.m[1][i]
-	//		+ left.m[0][2] * right.m[2][i]
-	//		+ left.m[0][3] * right.m[3][i];
-	//	output.m[1][i] = left.m[1][0] * right.m[0][i]
-	//		+ left.m[1][1] * right.m[1][i]
-	//		+ left.m[1][2] * right.m[2][i]
-	//		+ left.m[1][3] * right.m[3][i];
-	//	output.m[2][i] = left.m[2][0] * right.m[0][i]
-	//		+ left.m[2][1] * right.m[1][i]
-	//		+ left.m[2][2] * right.m[2][i]
-	//		+ left.m[2][3] * right.m[3][i];
-	//	output.m[3][i] = left.m[3][0] * right.m[0][i]
-	//		+ left.m[3][1] * right.m[1][i]
-	//		+ left.m[3][2] * right.m[2][i]
-	//		+ left.m[3][3] * right.m[3][i];
 		i++;
 	}
 	return (output);
@@ -71,4 +55,22 @@ t_vec3	mat_mult_vec(t_mat4x4 matrix, t_vec3 input)
 		output.z /= w;
 	}
 	return (output);
+}
+
+void	mat_identity(float m[4][4])
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (i < 4)
+	{
+		j = 0;
+		while (j < 4)
+		{
+			m[i][j] = (float)(i == j);
+			j++;
+		}
+		i++;
+	}
 }

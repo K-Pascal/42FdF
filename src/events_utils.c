@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/16 18:56:34 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/16 19:19:18 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/29 15:31:27 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 #include "minilibx-linux/mlx.h"
 
 #include "typedefs.h"
+
+#define DEFAULT_INV_FOV 144.f
 
 void	reset_map(t_fdf *fdf)
 {
@@ -35,10 +37,11 @@ void	reset_configuration(t_fdf *fdf)
 	fdf->map.table.z = 0;
 	fdf->map.scale.x = (float)fdf->img.width / 2.f / (float)fdf->map.num_values;
 	fdf->map.scale.y = (float)fdf->img.height / 2.f / (float)fdf->map.num_lines;
-	fdf->map.scale.z = my_min(fdf->map.scale.x, fdf->map.scale.y);
+	fdf->map.scale.z = 1.f;
 	fdf->map.translate.x = 0.f;
 	fdf->map.translate.y = 0.f;
 	fdf->map.translate.z = 0.f;
 	fdf->map.pos.x = fdf->img.width / 2;
 	fdf->map.pos.y = fdf->img.height / 2;
+	fdf->map.inv_fov = DEFAULT_INV_FOV;
 }

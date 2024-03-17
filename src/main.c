@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 18:50:46 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/16 19:09:27 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/29 19:51:29 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,11 @@ int	main(int argc, char **argv)
 	init_trigo_table(&fdf.map.table);
 	init_mlx(&fdf);
 	fdf.transform = K_NONE;
+	fdf.map.translate_offset = (float)(my_min(fdf.map.num_values,
+			fdf.map.num_lines));
+	fdf.prev_time = 0ll;
+	fdf.map.view_mode = V_ISOM;
+	fdf.map.proj_mode = P_ORTHO;
 	reset_configuration(&fdf);
 	render(&fdf);
 	mlx_loop(fdf.mlx_ptr);
