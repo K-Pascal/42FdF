@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 18:50:46 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/07 16:24:15 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/07 20:34:11 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,9 @@ void	render_isometric(t_fdf *fdf)
 			};
 			t_vec2 projection = isometric_projection(fdf->map.pos, point3d, &fdf->map);
 			if (j)
-				draw_line(&fdf->img, last, projection);
+				draw_line(&fdf->img, last, projection, 0xFF808080 + (point3d.z % 0xFF << 8));
 			if (i)
-				draw_line(&fdf->img, last_row[j], projection);
+				draw_line(&fdf->img, last_row[j], projection, 0xFF808080 + (point3d.z % 0xFF << 8));
 			last = projection;
 			last_row[j] = last;
 			j++;

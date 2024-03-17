@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 17:50:25 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/05 19:59:27 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/07 20:24:46 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static char	init_datahigh(t_vec2 *dst, t_vec2 *start, t_vec2 *end)
 	return (xi);
 }
 
-static void	draw_linelow(t_img *img, t_vec2 start, t_vec2 end)
+static void	draw_linelow(t_img *img, t_vec2 start, t_vec2 end, int color)
 {
 	t_vec2	dst;
 	int		error;
@@ -59,7 +59,7 @@ static void	draw_linelow(t_img *img, t_vec2 start, t_vec2 end)
 		if (start.x >= img->width)
 			break ;
 		if (start.x >= 0 && start.y >= 0 && start.y < img->height)
-			put_pixel(img, start.x, start.y, 0XFFFFFFFF);
+			put_pixel(img, start.x, start.y, color);
 		if (error > 0)
 		{
 			start.y += yi;
@@ -71,7 +71,7 @@ static void	draw_linelow(t_img *img, t_vec2 start, t_vec2 end)
 	}
 }
 
-static void	draw_linehigh(t_img *img, t_vec2 start, t_vec2 end)
+static void	draw_linehigh(t_img *img, t_vec2 start, t_vec2 end, int color)
 {
 	t_vec2	dst;
 	int		error;
@@ -84,7 +84,7 @@ static void	draw_linehigh(t_img *img, t_vec2 start, t_vec2 end)
 		if (start.y >= img->height)
 			break ;
 		if (start.x >= 0 && start.y >= 0 && start.x < img->width)
-			put_pixel(img, start.x, start.y, 0X00FFFFFF);
+			put_pixel(img, start.x, start.y, color);
 		if (error > 0)
 		{
 			start.x += xi;
@@ -96,20 +96,20 @@ static void	draw_linehigh(t_img *img, t_vec2 start, t_vec2 end)
 	}
 }
 
-void	draw_line(t_img *img, t_vec2 start, t_vec2 end)
+void	draw_line(t_img *img, t_vec2 start, t_vec2 end, int color)
 {
 	if (abs(end.y - start.y) < abs(end.x - start.x))
 	{
 		if (start.x > end.x)
-			draw_linelow(img, end, start);
+			draw_linelow(img, end, start, color);
 		else
-			draw_linelow(img, start, end);
+			draw_linelow(img, start, end, color);
 	}
 	else
 	{
 		if (start.y > end.y)
-			draw_linehigh(img, end, start);
+			draw_linehigh(img, end, start, color);
 		else
-			draw_linehigh(img, start, end);
+			draw_linehigh(img, start, end, color);
 	}
 }
