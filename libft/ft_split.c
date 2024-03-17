@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/07 15:28:42 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/01/22 15:23:18 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/01/23 16:27:41 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ static void	my_free_all(char **arr, size_t size)
 	while (i < size)
 	{
 		free(arr[i]);
+		arr[i] = NULL;
 		i++;
 	}
 	free(arr);

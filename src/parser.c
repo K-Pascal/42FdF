@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 16:12:35 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/01/25 11:07:58 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/01/29 18:03:03 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ size_t	count_values(char const str[], char const c)
 	return (count);
 }
 
-void	read_file_info(int fd, t_info *info)
+char	read_file_info(int fd, t_info *info)
 {
 	char	*str;
 
@@ -46,7 +46,7 @@ void	read_file_info(int fd, t_info *info)
 	if (str == NULL)
 	{
 		perror("get_next_line()");
-		exit(EXIT_FAILURE);
+		return (0);
 	}
 	info->num_values = count_values(str, ' ');
 	while (str != NULL)
@@ -55,16 +55,19 @@ void	read_file_info(int fd, t_info *info)
 		if (info->num_values != count_values(str, ' '))
 		{
 			ft_putendl_fd("Invalid map !", STDOUT_FILENO);
-			exit(EXIT_FAILURE);
+			free(str);
+			return (0);
 		}
 		free(str);
 		str = get_next_line(fd);
 	}
+	return (1);
 }
 
 void	get_info(char const pathname[], t_info *info)
 {
 	int		fd;
+	char	status;
 
 	fd = open(pathname, O_RDONLY);
 	if (fd == -1)
@@ -72,9 +75,11 @@ void	get_info(char const pathname[], t_info *info)
 		perror(pathname);
 		exit(EXIT_FAILURE);
 	}
-	read_file_info(fd, info);
+	status = read_file_info(fd, info);
 	if (close(fd) == -1)
 		perror("close()");
+	if (!status)
+		exit(EXIT_FAILURE);
 }
 
 void	my_free_all(char **str)

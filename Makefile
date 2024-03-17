@@ -1,5 +1,7 @@
 FILES		:=	main.c			\
 				parser.c		\
+				utils.c			\
+				draw_line.c		\
 
 SRC_PATH	:=	src
 SRC			:=	$(addprefix $(SRC_PATH)/,$(FILES))
@@ -8,7 +10,7 @@ OBJ_PATH	:=	build
 OBJ			:=	$(addprefix $(OBJ_PATH)/,$(FILES:.c=.o))
 
 INC_PATH	:=	inc
-CINC		:=	-I. -Iinc
+CINC		:=	-I. -Iinclude
 
 MLX_PATH	:=	minilibx-linux
 MLX			:=	mlx
@@ -22,7 +24,7 @@ CC		:=	cc
 CFLAGS	:=	-Wall -Wextra -Werror
 GDB		:=	-g3
 export GDB
-CLIB	:=	-L$(FT_PATH) -l$(FT) -L$(MLX_PATH) -l$(MLX) -lXext -lX11 -lm
+CLIB	:=	-L$(FT_PATH) -L$(MLX_PATH) -l$(FT) -l$(MLX) -lXext -lX11 -lm
 
 .PHONY: all
 all: $(NAME)
@@ -36,7 +38,7 @@ $(MLX_PATH)/lib$(MLX).a:
 $(FT_PATH)/lib$(FT).a:
 	make -C $(FT_PATH)
 
-$(OBJ_PATH)/%.o:  $(SRC_PATH)/%.c | $(OBJ_PATH)
+$(OBJ_PATH)/%.o: $(SRC_PATH)/%.c | $(OBJ_PATH)
 	$(CC) $(CFLAGS) $(GDB) $(CINC) -c $< -o $@
 
 $(OBJPATH):
