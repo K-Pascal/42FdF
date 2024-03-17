@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 16:54:41 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/08 18:10:04 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/08 21:04:36 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,12 +75,26 @@ typedef struct s_map
 	t_vec3			*last_row;
 }	t_map;
 
+typedef enum e_transform
+{
+	K_NONE = 0,
+	K_ROTATE_X = (1u << 0),
+	K_RROTATE_X = (1u << 1),
+	K_ROTATE_Y = (1u << 2),
+	K_RROTATE_Y = (1u << 3),
+	K_ROTATE_Z = (1u << 4),
+	K_RROTATE_Z = (1u << 5),
+	K_MOVE = (1u << 6),
+	K_MOD = (1u << 7)
+}	t_transform;
+
 typedef struct s_fdf
 {
-	void	*mlx_ptr;
-	t_win	win;
-	t_img	img;
-	t_map	map;
+	void		*mlx_ptr;
+	t_win		win;
+	t_img		img;
+	t_map		map;
+	t_transform	transform;
 }	t_fdf;
 
 #endif

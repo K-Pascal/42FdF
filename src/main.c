@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 18:50:46 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/08 18:47:40 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/08 21:18:26 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,27 +78,61 @@ void	reset_map(t_fdf *fdf)
 	mlx_clear_window(fdf->mlx_ptr, fdf->win.ptr);
 }
 
+int mouse_move(int x, int y, t_fdf *fdf)
+{
+	(void)fdf;
+	printf("%d %d\n", x, y);
+	return (1);
+}
+
 int mouse_pressed(int button, int x, int y, t_fdf *fdf)
 {
 	(void)x;
 	(void)y;
-	if (button == 4)
+	if (button == Button4)
 	{
 		fdf->map.scale.x *= 1.1f;
 		fdf->map.scale.y *= 1.1f;
-//		fdf->map.scale.z *= 1.1f;
 		reset_map(fdf);
 		render_isometric(fdf);
 	}
-	else if (button == 5)
+	else if (button == Button5)
 	{
 		fdf->map.scale.x *= 0.9f;
 		fdf->map.scale.y *= 0.9f;
-//		fdf->map.scale.z *= 0.9f;
 		reset_map(fdf);
 		render_isometric(fdf);
 	}
 	return (1);
+}
+
+int	key_released(int keycode, t_fdf *fdf)
+{
+	if (keycode == 'd')
+	{
+		fdf->transform &= ~K_ROTATE_Y;
+	}
+	else if (keycode == 'a')
+	{
+		fdf->transform &= ~K_RROTATE_Y;
+	}
+	else if (keycode == 'w')
+	{
+		fdf->transform &= ~K_ROTATE_X;
+	}
+	else if (keycode == 's')
+	{
+		fdf->transform &= ~K_RROTATE_X;
+	}
+	else if (keycode == 'q')
+	{
+		fdf->transform &= ~K_ROTATE_Z;
+	}
+	else if (keycode == 'e')
+	{
+		fdf->transform &= ~K_RROTATE_Z;
+	}
+	return (0);
 }
 
 int	key_pressed(int keycode, t_fdf *fdf)
@@ -109,32 +143,45 @@ int	key_pressed(int keycode, t_fdf *fdf)
 	{
 		fdf->map.table.x = 0;
 		fdf->map.table.y = 0;
+		fdf->map.table.z = 0;
 		reset_map(fdf);
 		render_isometric(fdf);
 	}
 	else if (keycode == 'd')
 	{
-		fdf->map.pos.x += fdf->map.translation_offset;
-		reset_map(fdf);
-		render_isometric(fdf);
+		fdf->transform |= K_ROTATE_Y;
+		//fdf->map.pos.x += fdf->map.translation_offset;
+		//reset_map(fdf);
+		//render_isometric(fdf);
 	}
 	else if (keycode == 'a')
 	{
-		fdf->map.pos.x -= fdf->map.translation_offset;
-		reset_map(fdf);
-		render_isometric(fdf);
+		fdf->transform |= K_RROTATE_Y;
+		//fdf->map.pos.x -= fdf->map.translation_offset;
+		//reset_map(fdf);
+		//render_isometric(fdf);
 	}
 	else if (keycode == 'w')
 	{
-		fdf->map.pos.y -= fdf->map.translation_offset;
-		reset_map(fdf);
-		render_isometric(fdf);
+		fdf->transform |= K_ROTATE_X;
+		//fdf->map.pos.y -= fdf->map.translation_offset;
+		//reset_map(fdf);
+		//render_isometric(fdf);
 	}
 	else if (keycode == 's')
 	{
-		fdf->map.pos.y += fdf->map.translation_offset;
-		reset_map(fdf);
-		render_isometric(fdf);
+		fdf->transform |= K_RROTATE_X;
+		//fdf->map.pos.y += fdf->map.translation_offset;
+		//reset_map(fdf);
+		//render_isometric(fdf);
+	}
+	else if (keycode == 'q')
+	{
+		fdf->transform |= K_ROTATE_Z;
+	}
+	else if (keycode == 'e')
+	{
+		fdf->transform |= K_RROTATE_Z;
 	}
 	else if (keycode == XK_Right)
 	{
@@ -181,6 +228,59 @@ int	key_pressed(int keycode, t_fdf *fdf)
 		fdf->map.scale.z += 0.125f;
 		if (fdf->map.scale.z == 0.f)
 			fdf->map.scale.z = 0.125f;
+		reset_map(fdf);
+		render_isometric(fdf);
+	}
+	return (0);
+}
+
+int update_frame(t_fdf *fdf)
+{
+	if (fdf->transform & K_ROTATE_X)
+	{
+		fdf->map.table.x--;
+		if (fdf->map.table.x < 0)
+			fdf->map.table.x = SIZE_TRIGO_TABLE - 1;
+		reset_map(fdf);
+		render_isometric(fdf);
+	}
+	if (fdf->transform & K_RROTATE_X)
+	{
+		fdf->map.table.x++;
+		if (fdf->map.table.x >= SIZE_TRIGO_TABLE)
+			fdf->map.table.x = 0;
+		reset_map(fdf);
+		render_isometric(fdf);
+	}
+	if (fdf->transform & K_ROTATE_Y)
+	{
+		fdf->map.table.y--;
+		if (fdf->map.table.y < 0)
+			fdf->map.table.y = SIZE_TRIGO_TABLE - 1;
+		reset_map(fdf);
+		render_isometric(fdf);
+	}
+	if (fdf->transform & K_RROTATE_Y)
+	{
+		fdf->map.table.y++;
+		if (fdf->map.table.y >= SIZE_TRIGO_TABLE)
+			fdf->map.table.y = 0;
+		reset_map(fdf);
+		render_isometric(fdf);
+	}
+	if (fdf->transform & K_ROTATE_Z)
+	{
+		fdf->map.table.z--;
+		if (fdf->map.table.z < 0)
+			fdf->map.table.z = SIZE_TRIGO_TABLE - 1;
+		reset_map(fdf);
+		render_isometric(fdf);
+	}
+	if (fdf->transform & K_RROTATE_Z)
+	{
+		fdf->map.table.z++;
+		if (fdf->map.table.z >= SIZE_TRIGO_TABLE)
+			fdf->map.table.z = 0;
 		reset_map(fdf);
 		render_isometric(fdf);
 	}
@@ -271,7 +371,9 @@ char	start_mlx(t_fdf *fdf)
 	fdf->mlx_ptr = mlx_init();
 	if (fdf->mlx_ptr == NULL)
 		return (0);
-	mlx_get_screen_size(fdf->mlx_ptr, &fdf->win.width, &fdf->win.height);
+	//mlx_get_screen_size(fdf->mlx_ptr, &fdf->win.width, &fdf->win.height);
+	fdf->win.width = 1280;
+	fdf->win.height = 720;
 	fdf->win.ptr = mlx_new_window(fdf->mlx_ptr, fdf->win.width, fdf->win.height, "FdF");
 	if (fdf->win.ptr == NULL)
 	{
@@ -325,9 +427,12 @@ void	init_mlx(t_fdf *fdf)
 	fdf->img.data = mlx_get_data_addr(fdf->img.ptr, &fdf->img.bytes_per_pixel,
 			&fdf->img.size_line, &fdf->img.endian);
 	fdf->img.bytes_per_pixel >>= 3;
-	mlx_hook(fdf->win.ptr, KeyPress, KeyPressMask, key_pressed, fdf);
+	mlx_hook(fdf->win.ptr, KeyPress, KeyPressMask, &key_pressed, fdf);
+	mlx_hook(fdf->win.ptr, KeyRelease, KeyReleaseMask, &key_released, fdf);
 	mlx_hook(fdf->win.ptr, ButtonPress, ButtonPressMask, &mouse_pressed, fdf);
+	mlx_hook(fdf->win.ptr, MotionNotify, Button1MotionMask, &mouse_move, fdf);
 	mlx_hook(fdf->win.ptr, DestroyNotify, NoEventMask, &mlx_loop_end, fdf->mlx_ptr);
+	mlx_loop_hook(fdf->mlx_ptr, update_frame, fdf);
 }
 
 void	deinit_prog(t_fdf *fdf)
