@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 16:12:35 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/06 16:28:24 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/07 19:46:49 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static char	parse_mapinfo(t_map *info, int fd)
 	info->num_values = ft_countwords(str, ' ');
 	while (str != NULL)
 	{
-		if (info->num_values != ft_countwords(str, ' '))
+		if (info->num_values != (int)ft_countwords(str, ' '))
 		{
 			ft_putendl_fd("Invalid map !", STDERR_FILENO);
 			free(str);
@@ -51,7 +51,7 @@ static char	parse_mapinfo(t_map *info, int fd)
 
 static char	store_mapvalue(int arr_ints[], char str[])
 {
-	size_t	i;
+	int		i;
 	char	**arr_str;
 
 	arr_str = ft_split(str, ' ');
@@ -72,7 +72,7 @@ static char	store_mapvalue(int arr_ints[], char str[])
 
 static char	parse_mapdata(t_map *map, int fd)
 {
-	size_t	i;
+	int		i;
 	char	*str;
 	char	status;
 

@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 16:54:41 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/06 18:05:25 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/07 19:50:19 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,12 @@ typedef struct s_trigo_table
 typedef struct s_map
 {
 	int				*altitudes;
-	size_t			num_lines;
-	size_t			num_values;
+	int				num_lines;
+	int				num_values;
 	t_vec2			pos;
 	int				translation_offset;
 	t_trigo_table	table;
+	int				z_normalize;
 }	t_map;
 
 typedef struct s_fdf

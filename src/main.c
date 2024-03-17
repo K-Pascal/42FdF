@@ -30,12 +30,22 @@
 
 void	render_isometric(t_fdf *fdf)
 {
-	size_t	i;
-	size_t	j;
+	int		i;
+	int		j;
 	t_vec3	c;
+	int		scale_x;
+	int		scale_y;
 
-	c.x = ((fdf->map.num_values - 1) * ((fdf->img.width >> 1) / fdf->map.num_values)) / 2;
-	c.y = ((fdf->map.num_lines - 1) * ((fdf->img.height >> 1) / fdf->map.num_lines)) / 2;
+	if ((fdf->img.width >> 1) <= fdf->map.num_values)
+		scale_x = 1;
+	else
+		scale_x = ((fdf->img.width >> 1) / fdf->map.num_values);
+	if ((fdf->img.height >> 1) <= fdf->map.num_lines)
+		scale_y = 1;
+	else
+		scale_y = ((fdf->img.height >> 1) / fdf->map.num_lines);
+	c.x = ((fdf->map.num_values - 1) * scale_x) / 2;
+	c.y = ((fdf->map.num_lines - 1) * scale_y) / 2;
 	c.z = 0;
 	t_vec2	*last_row = malloc(fdf->map.num_values * sizeof(*last_row));
 	if (last_row == NULL)
@@ -48,9 +58,10 @@ void	render_isometric(t_fdf *fdf)
 		while (j < fdf->map.num_values)
 		{
 			t_vec3 point3d = {
-				j * (fdf->img.width / 2 / fdf->map.num_values) - c.x,
-				i * (fdf->img.height / 2 / fdf->map.num_lines) - c.y,
-				fdf->map.altitudes[i * fdf->map.num_values + j] * min(fdf->img.width / fdf->map.num_values, fdf->img.height / fdf->map.num_lines) / 10
+				j * scale_x - c.x,
+				i * scale_y - c.y,
+				fdf->map.altitudes[i * fdf->map.num_values + j] * fdf->map.z_normalize
+				//fdf->map.altitudes[i * fdf->map.num_values + j] * min(fdf->img.width / fdf->map.num_values, fdf->img.height / fdf->map.num_lines) / fdf->map.z_normalize
 			};
 			t_vec2 projection = isometric_projection(fdf->map.pos, point3d, &fdf->map);
 			if (j)
@@ -149,6 +160,22 @@ int	key_pressed(int keycode, t_fdf *fdf)
 		fdf->map.table.x++;
 		if (fdf->map.table.x >= SIZE_TRIGO_TABLE)
 			fdf->map.table.x = 0;
+		reset_map(fdf);
+		render_isometric(fdf);
+	}
+	else if (keycode == '-')
+	{
+		fdf->map.z_normalize -= 2;
+		if (!fdf->map.z_normalize)
+			fdf->map.z_normalize = -1;
+		reset_map(fdf);
+		render_isometric(fdf);
+	}
+	else if (keycode == '=')
+	{
+		fdf->map.z_normalize += 2;
+		if (!fdf->map.z_normalize)
+			fdf->map.z_normalize = 1;
 		reset_map(fdf);
 		render_isometric(fdf);
 	}
@@ -301,6 +328,8 @@ int	main(int argc, char **argv)
 	fdf.map.table.x = 0;
 	fdf.map.table.y = 0;
 	fdf.map.table.z = 0;
+	fdf.map.z_normalize = 1;
+	printf("%d %d %d %d\n", (fdf.img.width >> 1), fdf.map.num_values, (fdf.img.height >> 1), fdf.map.num_lines);
 	mlx_hook(fdf.win.ptr, KeyPress, KeyPressMask, &key_pressed, &fdf);
 	mlx_hook(fdf.win.ptr, DestroyNotify, NoEventMask, &close_mlx, &fdf);
 	mlx_loop(fdf.mlx_ptr);
