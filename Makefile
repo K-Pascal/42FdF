@@ -56,7 +56,8 @@ CC		:=	cc
 CFLAGS	:=	-Wall -Wextra -Werror
 GDB		:=	-g3
 export GDB
-CLIB	:=	-L$(FT_PATH) -L$(MLX_PATH) -l$(FT) -l$(MLX) -lXext -lX11 -lm
+LDLIBS	:=	-l$(FT) -l$(MLX) -lXext -lX11 -lm
+LDFLAGS	:=	-L$(FT_PATH) -L$(MLX_PATH)
 
 .PHONY: all bonus
 all: $(NAME)
@@ -65,12 +66,12 @@ bonus: $(NAME_BONUS)
 
 $(NAME): $(OBJ) $(OBJ_PATH)/main.o $(MLX_PATH)/lib$(MLX).a $(FT_PATH)/lib$(FT).a
 	@echo "$(ORANGE)$(ITA)Linking$(NOITA) into $(BOLD)$@$(DEFAULT)..."
-	@$(CC) $(CFLAGS) $(GDB) $(CINC) $(OBJ) $(OBJ_PATH)/main.o -o $@ $(CLIB) \
+	@$(CC) $(OBJ) $(OBJ_PATH)/main.o -o $@ $(LDFLAGS) $(LDLIBS) \
 		&& echo "$(GOTO_B)$(GREEN)Successfully $(ITA)linked$(NOITA) into $(BOLD)$@$(DEFAULT)"
 
 $(NAME_BONUS): $(OBJ_BONUS) $(OBJ_PATH)/main_bonus.o $(MLX_PATH)/lib$(MLX).a $(FT_PATH)/lib$(FT).a
 	@echo "$(ORANGE)$(ITA)Linking$(NOITA) into $(BOLD)$@$(DEFAULT)..."
-	@$(CC) $(CFLAGS) $(GDB) $(CINC) $(OBJ_BONUS) $(OBJ_PATH)/main_bonus.o -o $@ $(CLIB) \
+	@$(CC) $(OBJ_BONUS) $(OBJ_PATH)/main_bonus.o -o $@ $(LDFLAGS) $(LDLIBS) \
 		&& echo "$(GOTO_B)$(GREEN)Successfully $(ITA)linked$(NOITA) into $(BOLD)$@$(DEFAULT)"
 
 $(MLX_PATH)/lib$(MLX).a:
@@ -102,6 +103,9 @@ clean:
 fclean: clean
 	@( rm $(NAME) 2> /dev/null \
 		&& echo "$(RED)$(ITA)Removed$(NOITA) executable $(NAME)$(DEFAULT)" ) \
+		|| :
+	@( rm $(NAME_BONUS) 2> /dev/null \
+		&& echo "$(RED)$(ITA)Removed$(NOITA) executable $(NAME_BONUS)$(DEFAULT)" ) \
 		|| :
 
 cleanlib:
