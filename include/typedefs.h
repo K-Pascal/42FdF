@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 16:54:41 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/15 16:02:18 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/15 19:32:48 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ typedef struct s_img
 	int		width;
 	int		height;
 	char	*data;
-	int		bytes_per_pixel;
+	int		bpp;
 	int		size_line;
 	int		endian;
 }	t_img;
@@ -66,7 +66,7 @@ typedef struct s_trigo_table
 
 typedef struct s_value
 {
-	float	altitudes;
+	float	altitude;
 	int		color;
 }	t_value;
 

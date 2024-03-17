@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 16:12:35 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/15 17:18:12 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/16 19:14:13 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,14 @@ static int	add_to_node(t_list **data, char str[], int num_values)
 
 static int	read_file(t_map *info, int fd, char str[])
 {
-	int	status;
+	int		status;
+	char	*newline;
 
 	while (str != NULL)
 	{
+		newline = ft_strchr(str, '\n');
+		if (newline != NULL)
+			*newline = '\0';
 		status = info->num_values == (int)ft_countwords(str, ' ');
 		if (!status)
 		{
@@ -68,9 +72,10 @@ static int	read_file(t_map *info, int fd, char str[])
 	return (0);
 }
 
-static int read_map(t_map *info, int fd)
+static int	read_map(t_map *info, int fd)
 {
 	char	*str;
+	char	*newline;
 
 	str = get_next_line(fd);
 	if (str == NULL)
@@ -81,6 +86,9 @@ static int read_map(t_map *info, int fd)
 			ft_putendl_fd("Empty map !", STDERR_FILENO);
 		return (0);
 	}
+	newline = ft_strchr(str, '\n');
+	if (newline != NULL)
+		*newline = '\0';
 	info->num_values = (int)ft_countwords(str, ' ');
 	return (read_file(info, fd, str));
 }

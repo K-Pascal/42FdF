@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 17:02:35 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/15 16:30:56 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/15 19:32:43 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 
 static char	*parse_values(t_value value[], size_t index, char str[])
 {
-	value[index].altitudes = (float)ft_atoi(str);
+	value[index].altitude = (float)ft_atoi(str);
 	if (*str == '+' || *str == '-')
 		str++;
 	while (ft_isdigit(*str))
