@@ -6,11 +6,12 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 11:09:13 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/03/01 18:36:56 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/03/04 19:16:53 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "matrix.h"
+#include "typedefs.h"
 
 t_mat4x4	mat_mult_mat(t_mat4x4 left, t_mat4x4 right)
 {

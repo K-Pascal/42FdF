@@ -6,15 +6,14 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 14:45:15 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/03/04 17:39:44 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/03/04 19:21:26 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <math.h>
-
 #include "typedefs.h"
 
-void	orthographic_projection(t_vec2 *output, t_fdf *fdf, t_vec3 point3d)
+void	orthographic_projection(t_vec2 *output, t_fdf const *fdf,
+		t_vec3 point3d)
 {
 	output->x = point3d.x + fdf->map.pos.x;
 	output->y = point3d.y + fdf->map.pos.y;

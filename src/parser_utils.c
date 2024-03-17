@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 17:02:35 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/03/01 19:02:05 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/03/04 19:23:37 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 
 #include "typedefs.h"
 
-static char	*parse_values(t_value value[], size_t index, char str[])
+static char	*parse_values(t_value value[], size_t index, char const str[])
 {
 	value[index].altitude = (float)ft_atoi(str);
 	if (*str == '+' || *str == '-')
@@ -38,10 +38,10 @@ static char	*parse_values(t_value value[], size_t index, char str[])
 	}
 	else
 		value[index].color = 0xFFFFFFFF;
-	return (str);
+	return ((char *)str);
 }
 
-static void	parse_line(t_value value[], char str[])
+static void	parse_line(t_value value[], char const str[])
 {
 	size_t	i;
 
@@ -59,7 +59,7 @@ static void	parse_line(t_value value[], char str[])
 	}
 }
 
-t_list	*store_mapvalue(char str[], int num_values)
+t_list	*store_mapvalue(char const str[], int num_values)
 {
 	t_list	*node;
 	t_value	*value;

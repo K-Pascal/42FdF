@@ -6,17 +6,15 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 16:28:56 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/03/04 18:24:31 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/03/04 19:12:56 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RENDER_UTILS_H
 # define RENDER_UTILS_H
 
-# include "libft/libft.h"
-
 # include "typedefs.h"
 
-void	render_row(t_list *line, int y, t_fdf *fdf);
+t_vec3	transform_points(float x, float y, float z, t_fdf *fdf);
 
 #endif

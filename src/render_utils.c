@@ -6,14 +6,10 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 16:13:46 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/03/04 17:41:33 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/03/04 19:07:20 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft/libft.h"
-#include "minilibx-linux/mlx.h"
-
-#include "draw_line.h"
 #include "matrix.h"
 #include "projections.h"
 #include "transformations.h"
@@ -64,7 +60,7 @@ static t_mat4x4	rotate_scale(t_fdf *fdf)
 	return (mat_world);
 }
 
-static t_vec3	transformations(float x, float y, float z, t_fdf *fdf)
+t_vec3	transform_points(float x, float y, float z, t_fdf *fdf)
 {
 	t_vec3		point3d;
 	t_mat4x4	mat_world;
@@ -76,42 +72,4 @@ static t_vec3	transformations(float x, float y, float z, t_fdf *fdf)
 			rotate_scale(fdf));
 	point3d = mat_mult_vec(mat_world, point3d);
 	return (point3d);
-}
-
-static void	render_lines(t_list *line, int y, int x, t_fdf *fdf)
-{
-	float	z;
-	t_vec2	projection;
-	t_vec3	point3d;
-
-	z = ((t_value *)line->content)[x].altitude - fdf->map.center.z;
-	if (fdf->map.proj_mode == P_PERSP)
-		z *= fdf->map.scale.z;
-	point3d = transformations((float)(x) - fdf->map.center.x,
-			(float)(y) - fdf->map.center.y,
-			z,
-			fdf);
-	orthographic_projection(&projection, fdf, point3d);
-	if (x)
-		draw_line(&fdf->img, fdf->map.last, projection,
-			((t_value *)line->content)[x].color);
-	if (y)
-		draw_line(&fdf->img, fdf->map.last_row[x], projection,
-			((t_value *)line->content)[x].color);
-	fdf->map.last = projection;
-	fdf->map.last_row[x] = projection;
-}
-
-void	render_row(t_list *line, int y, t_fdf *fdf)
-{
-	int	x;
-	int	num_values;
-
-	num_values = fdf->map.num_values;
-	x = 0;
-	while (x < num_values)
-	{
-		render_lines(line, y, x, fdf);
-		x++;
-	}
 }

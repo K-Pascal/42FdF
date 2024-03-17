@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 17:51:54 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/03/04 18:02:19 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/03/04 19:20:12 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ static void	init_mapvalues(t_map *map)
 		/ (float)(map->num_values * map->num_lines);
 }
 
-void	init_mapdata(t_fdf *fdf, char pathname[])
+void	init_mapdata(t_fdf *fdf, char const pathname[])
 {
 	get_mapinfo(&fdf->map, pathname);
 	fdf->map.last_row = malloc(fdf->map.num_values * sizeof(t_vec2));

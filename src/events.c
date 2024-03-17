@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 15:20:33 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/03/04 17:50:13 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/03/04 19:02:25 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 
 #include "minilibx-linux/mlx.h"
 
-#include "typedefs.h"
-#include "render.h"
 #include "events_utils.h"
+#include "render.h"
+#include "typedefs.h"
 
 int	mouse_pressed(int button, int x, int y, t_fdf *fdf)
 {

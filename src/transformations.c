@@ -6,14 +6,14 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 14:41:59 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/03/04 17:35:56 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/03/04 19:19:03 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "typedefs.h"
 #include <math.h>
 
-void	rotate(float output[4][4], t_trigo_table *table)
+void	rotate(float output[4][4], t_trigo_table const *table)
 {
 	output[0][0] = table->y.cos * table->z.cos;
 	output[0][1] = table->x.sin * table->y.sin
@@ -38,7 +38,7 @@ void	rotate(float output[4][4], t_trigo_table *table)
 	output[3][3] = 1.f;
 }
 
-void	translate(float output[4][4], t_vec3 *translate)
+void	translate(float output[4][4], t_vec3 const *translate)
 {
 	output[0][0] = 1.f;
 	output[0][1] = 0.f;
@@ -58,7 +58,7 @@ void	translate(float output[4][4], t_vec3 *translate)
 	output[3][3] = 1.f;
 }
 
-void	scale(float output[4][4], t_vec3 *scale)
+void	scale(float output[4][4], t_vec3 const *scale)
 {
 	output[0][0] = scale->x;
 	output[0][1] = 0.f;
