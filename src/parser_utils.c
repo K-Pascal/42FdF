@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 17:02:35 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/15 19:32:43 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/22 14:42:32 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ t_list	*store_mapvalue(char str[], int num_values)
 	if (node == NULL)
 	{
 		perror("store_mapvalue():ft_lstnew()");
+		free(value);
 		return (NULL);
 	}
 	return (node);
