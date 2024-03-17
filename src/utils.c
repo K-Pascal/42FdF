@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 17:51:54 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/13 15:41:30 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/14 15:48:53 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	init_trigo_table(t_trigo_table *table)
 	table->z = 0;
 }
 
-int	min(int a, int b)
+float	min(float a, float b)
 {
 	if (a < b)
 		return (a);

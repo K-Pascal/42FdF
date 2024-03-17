@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 15:20:33 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/13 18:40:46 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/14 15:50:58 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	key_released(int keycode, t_fdf *fdf)
 	return (0);
 }
 
-void	reset_configuration(t_fdf *fdf)
+static void	reset_configuration(t_fdf *fdf)
 {
 	fdf->map.table.x = 0;
 	fdf->map.table.y = 0;
@@ -83,7 +83,7 @@ void	reset_configuration(t_fdf *fdf)
 	else
 		fdf->map.scale.y
 			= ((float)(fdf->img.height >> 1) / (float)fdf->map.num_lines);
-	fdf->map.scale.z = 1.f;
+	fdf->map.scale.z = min(fdf->map.scale.x, fdf->map.scale.y);
 	fdf->map.translate.x = 0.f;
 	fdf->map.translate.y = 0.f;
 	fdf->map.translate.z = 0.f;

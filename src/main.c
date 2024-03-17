@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 18:50:46 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/13 18:18:46 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/14 15:37:33 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	main(int argc, char **argv)
 		fdf.map.scale.y = 1.f;
 	else
 		fdf.map.scale.y = len / (float)fdf.map.num_lines;
-	fdf.map.scale.z = 1.f;
+	fdf.map.scale.z = min(fdf.map.scale.y, fdf.map.scale.x);
 	fdf.map.pos.x = fdf.img.width >> 1;
 	fdf.map.pos.y = fdf.img.height >> 1;
 	fdf.transform = K_NONE;
