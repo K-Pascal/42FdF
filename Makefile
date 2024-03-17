@@ -1,5 +1,6 @@
 FILES		:=	main.c				\
 				parser.c			\
+				parser_utils.c		\
 				utils.c				\
 				draw_line.c			\
 				transformations.c	\

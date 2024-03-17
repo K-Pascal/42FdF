@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 16:54:41 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/13 15:04:54 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/15 16:02:18 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 # define SIZE_TRIGO_TABLE 36
 
 # include <stddef.h>
+
+# include "libft/libft.h"
 
 typedef struct s_vec2
 {
@@ -70,7 +72,7 @@ typedef struct s_value
 
 typedef struct s_map
 {
-	t_value			*data;
+	t_list			*data;
 	int				num_lines;
 	int				num_values;
 	t_vec2			pos;

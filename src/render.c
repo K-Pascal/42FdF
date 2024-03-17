@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 15:29:56 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/14 16:06:41 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/15 16:11:54 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,31 +39,31 @@ void	render(t_fdf *fdf)
 {
 	int		i;
 	int		j;
-	int		k;
 	t_vec2	last;
 	t_vec2	projection;
+	t_list	*line;
 
 	i = 0;
-	k = 0;
-	while (i < fdf->map.num_lines)
+	line = fdf->map.data;
+	while (line != NULL)
 	{
 		j = 0;
 		while (j < fdf->map.num_values)
 		{
-			projection = render_isometric((float)(i - fdf->map.center.x),
-					(float)(j - fdf->map.center.y),
-					(float)(fdf->map.data[k].altitudes),
+			projection = render_isometric((float)(j - fdf->map.center.x),
+					(float)(i - fdf->map.center.y),
+					((t_value *)line->content)[j].altitudes,
 					fdf);
 			if (j)
-				draw_line(&fdf->img, last, projection, fdf->map.data[k].color);
+				draw_line(&fdf->img, last, projection, ((t_value *)line->content)[j].color);
 			if (i)
 				draw_line(&fdf->img, fdf->map.last_row[j], projection,
-					fdf->map.data[k].color);
+					((t_value *)line->content)[j].color);
 			last = projection;
 			fdf->map.last_row[j] = last;
 			j++;
-			k++;
 		}
+		line = line->next;
 		i++;
 	}
 	mlx_put_image_to_window(fdf->mlx_ptr, fdf->win.ptr, fdf->img.ptr, 0, 0);

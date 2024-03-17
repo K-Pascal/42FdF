@@ -1,20 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.h                                           :+:      :+:    :+:   */
+/*   parser_utils.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/23 16:56:45 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/15 16:30:16 by pnguyen-         ###   ########.fr       */
+/*   Created: 2024/02/14 17:06:04 by pnguyen-          #+#    #+#             */
+/*   Updated: 2024/02/15 16:30:05 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PARSER_H
-# define PARSER_H
+#ifndef PARSER_UTILS_H
+# define PARSER_UTILS_H
+
+# include "libft/libft.h"
 
 # include "typedefs.h"
 
-void	get_mapinfo(t_map *info, char const pathname[]);
+t_list	*store_mapvalue(char str[], int num_values);
 
 #endif

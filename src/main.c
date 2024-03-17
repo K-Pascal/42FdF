@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 18:50:46 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/14 15:37:33 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/15 17:19:47 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,17 +92,11 @@ int	start_mlx(t_fdf *fdf)
 void	init_mapdata(t_fdf *fdf, char pathname[])
 {
 	get_mapinfo(&fdf->map, pathname);
-	if (!get_mapdata(&fdf->map, pathname))
-	{
-		free(fdf->map.data);
-		free(fdf->map.last_row);
-		exit(EXIT_FAILURE);
-	}
 	fdf->map.last_row = malloc(fdf->map.num_values * sizeof(t_vec3));
 	if (fdf->map.last_row == NULL)
 	{
-		perror("malloc()");
-		free(fdf->map.data);
+		perror("init_mapdata():malloc()");
+		ft_lstclear(&(fdf->map.data), &free);
 		exit(EXIT_FAILURE);
 	}
 	fdf->map.center.x = (float)(fdf->map.num_values >> 1);
@@ -118,7 +112,7 @@ void	init_mlx(t_fdf *fdf)
 	if (!start_mlx(fdf))
 	{
 		ft_putendl_fd("Failed to initialize mlx", STDERR_FILENO);
-		free(fdf->map.data);
+		ft_lstclear(&(fdf->map.data), &free);
 		free(fdf->map.last_row);
 		exit(EXIT_FAILURE);
 	}
@@ -135,7 +129,7 @@ void	init_mlx(t_fdf *fdf)
 
 void	deinit_prog(t_fdf *fdf)
 {
-	free(fdf->map.data);
+	ft_lstclear(&(fdf->map.data), &free);
 	free(fdf->map.last_row);
 	mlx_destroy_image(fdf->mlx_ptr, fdf->img.ptr);
 	mlx_destroy_window(fdf->mlx_ptr, fdf->win.ptr);
