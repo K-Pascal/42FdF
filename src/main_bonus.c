@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 18:50:46 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/03/04 18:44:16 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/03/04 18:26:11 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 #include "minilibx-linux/mlx.h"
 
+#include "frame_bonus.h"
 #include "render.h"
 #include "typedefs.h"
 #include "utils.h"
@@ -33,6 +34,7 @@ int	main(int argc, char **argv)
 	reset_configuration(&fdf);
 	init_scene_data(&fdf);
 	render(&fdf);
+	mlx_loop_hook(fdf.mlx_ptr, &update_frame, &fdf);
 	mlx_loop(fdf.mlx_ptr);
 	deinit_prog(&fdf);
 	return (0);
@@ -40,21 +42,6 @@ int	main(int argc, char **argv)
 
 static void	init_scene_data(t_fdf *fdf)
 {
-	t_list	*node;
-	int		i;
-
-	node = fdf->map.data;
-	while (node != NULL)
-	{
-		i = 0;
-		while (i < fdf->map.num_values)
-		{
-			((t_value *)node->content)[i].color = 0xFFFFFFFF;
-			i++;
-		}
-		node = node->next;
-	}
-	fdf->map.scale.z = 5.f;
 	fdf->transform = K_NONE;
 	fdf->prev_time = 0ll;
 	fdf->map.view_mode = V_ISOM;

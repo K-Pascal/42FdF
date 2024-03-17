@@ -6,11 +6,10 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 17:51:54 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/29 14:25:31 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/03/04 18:02:19 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -21,7 +20,6 @@
 
 #include "events.h"
 #include "parser.h"
-#include "render.h"
 #include "typedefs.h"
 
 static int	start_mlx(t_fdf *fdf)
@@ -30,8 +28,8 @@ static int	start_mlx(t_fdf *fdf)
 	if (fdf->mlx_ptr == NULL)
 		return (0);
 	mlx_get_screen_size(fdf->mlx_ptr, &fdf->win.width, &fdf->win.height);
-	fdf->win.width >>= 1;
-	fdf->win.height >>= 1;
+	fdf->win.width /= 2;
+	fdf->win.height /= 2;
 	fdf->win.ptr = mlx_new_window(fdf->mlx_ptr,
 			fdf->win.width, fdf->win.height, "FdF");
 	if (fdf->win.ptr == NULL)
@@ -53,12 +51,36 @@ static int	start_mlx(t_fdf *fdf)
 	return (1);
 }
 
-void	init_mapdata(t_fdf *fdf, char pathname[])
+static void	init_mapvalues(t_map *map)
 {
 	t_list	*current;
 	float	center_z;
 	int		i;
 
+	if (map->num_values < map->num_lines)
+		map->translate_offset = (float)(map->num_values);
+	else
+		map->translate_offset = (float)(map->num_lines);
+	map->center.x = (float)(map->num_values - 1) / 2.f;
+	map->center.y = (float)(map->num_lines - 1) / 2.f;
+	center_z = 0.f;
+	current = map->data;
+	while (current != NULL)
+	{
+		i = 0;
+		while (i < map->num_values)
+		{
+			center_z += ((t_value *)current->content)[i].altitude;
+			i++;
+		}
+		current = current->next;
+	}
+	map->center.z = center_z
+		/ (float)(map->num_values * map->num_lines);
+}
+
+void	init_mapdata(t_fdf *fdf, char pathname[])
+{
 	get_mapinfo(&fdf->map, pathname);
 	fdf->map.last_row = malloc(fdf->map.num_values * sizeof(t_vec2));
 	if (fdf->map.last_row == NULL)
@@ -67,25 +89,7 @@ void	init_mapdata(t_fdf *fdf, char pathname[])
 		ft_lstclear(&(fdf->map.data), &free);
 		exit(EXIT_FAILURE);
 	}
-	if (SIZE_TRIGO_TABLE <= 4)
-		fdf->map.angle_offset = 1;
-	else
-		fdf->map.angle_offset = SIZE_TRIGO_TABLE / 2;
-	fdf->map.center.x = (float)(fdf->map.num_values - 1) / 2.f;
-	fdf->map.center.y = (float)(fdf->map.num_lines - 1) / 2.f;
-	center_z = 0.f;
-	current = fdf->map.data;
-	while (current != NULL)
-	{
-		i = 0;
-		while (i < fdf->map.num_values)
-		{
-			center_z += ((t_value *)current->content)[i].altitude;
-			i++;
-		}
-		current = current->next;
-	}
-	fdf->map.center.z = center_z / (float)(fdf->map.num_values * fdf->map.num_lines);
+	init_mapvalues(&fdf->map);
 }
 
 void	init_mlx(t_fdf *fdf)
@@ -105,27 +109,6 @@ void	init_mlx(t_fdf *fdf)
 	mlx_hook(fdf->win.ptr, ButtonPress, ButtonPressMask, &mouse_pressed, fdf);
 	mlx_hook(fdf->win.ptr, DestroyNotify, NoEventMask,
 		&mlx_loop_end, fdf->mlx_ptr);
-	mlx_loop_hook(fdf->mlx_ptr, &update_frame, fdf);
-}
-
-void	init_trigo_table(t_trigo_table *table)
-{
-	int			i;
-	float		angle;
-	float const	angle_offset = 2.f * 3.14159f / SIZE_TRIGO_TABLE;
-
-	angle = 0.f;
-	i = 0;
-	while (i < SIZE_TRIGO_TABLE)
-	{
-		table->trigo[i].cos = cosf(angle);
-		table->trigo[i].sin = sinf(angle);
-		angle += angle_offset;
-		i++;
-	}
-	table->x = 0;
-	table->y = 0;
-	table->z = 0;
 }
 
 void	deinit_prog(t_fdf *fdf)

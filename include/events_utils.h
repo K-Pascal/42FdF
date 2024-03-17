@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/16 19:02:09 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/16 19:08:30 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/03/04 17:48:46 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,10 @@
 
 # include "typedefs.h"
 
-void	reset_map(t_fdf *fdf);
-float	my_min(float a, float b);
 void	reset_configuration(t_fdf *fdf);
+void	scroll_event(int button, t_fdf *fdf);
+void	key_transform_release(int keycode, t_fdf *fdf);
+int		key_menu_pressed(int keycode, t_fdf *fdf);
+void	key_transform_pressed(int keycode, t_fdf *fdf);
 
 #endif

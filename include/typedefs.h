@@ -6,14 +6,12 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 16:54:41 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/29 19:49:28 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/03/04 18:04:25 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TYPEDEFS_H
 # define TYPEDEFS_H
-
-# define SIZE_TRIGO_TABLE 144 
 
 # include <stddef.h>
 
@@ -37,6 +35,7 @@ typedef struct s_img
 	void	*ptr;
 	int		width;
 	int		height;
+	float	aspect_ratio;
 	char	*data;
 	int		bpp;
 	int		size_line;
@@ -58,10 +57,12 @@ typedef struct s_trigo
 
 typedef struct s_trigo_table
 {
-	t_trigo	trigo[SIZE_TRIGO_TABLE];
-	float	x;
-	float	y;
-	float	z;
+	t_trigo	x;
+	t_trigo	y;
+	t_trigo	z;
+	float	angle_x;
+	float	angle_y;
+	float	angle_z;
 }	t_trigo_table;
 
 typedef struct s_value
@@ -90,12 +91,13 @@ typedef struct s_map
 	int				num_values;
 	t_vec2			pos;
 	t_trigo_table	table;
-	float			angle_offset;
 	float			inv_fov;
+	float			fov;
 	t_vec3			translate;
 	float			translate_offset;
 	t_vec3			scale;
 	t_vec3			center;
+	t_vec2			last;
 	t_vec2			*last_row;
 	t_view			view_mode;
 	t_proj			proj_mode;

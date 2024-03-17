@@ -8,35 +8,40 @@ CYAN	:=	\e[36m
 BOLD	:=	\e[1m
 DIM		:=	\e[2m
 BOM		:=	\e[22m
-ITA	:=	\e[3m
+ITA		:=	\e[3m
 NOITA	:=	\e[23m
 
 GOTO_B	:=	\e[1A\e[K
 
 DEFAULT	:=	\e(B\e[m
 
-FILES		:=	main.c				\
-				parser.c			\
-				parser_utils.c		\
-				utils.c				\
-				draw_line.c			\
+FILES		:=	draw_line.c			\
 				draw_line_utils.c	\
-				transformations.c	\
-				projections.c		\
 				events.c			\
 				events_utils.c		\
-				render.c			\
 				matrix.c			\
+				parser.c			\
+				parser_utils.c		\
+				projections.c		\
+				render.c			\
+				render_utils.c		\
+				transformations.c	\
+				utils.c				\
+
+FILES_BONUS	:=	frame_bonus.c		\
+				frame_utils_bonus.c	\
 
 SRC_PATH	:=	src
 SRC			:=	$(addprefix $(SRC_PATH)/,$(FILES))
+SRC_BONUS	:= $(SRC) $(addprefix $(SRC_PATH)/,$(FILES_BONUS))
 
 OBJ_PATH	:=	build
 OBJ			:=	$(addprefix $(OBJ_PATH)/,$(FILES:.c=.o))
-DEPS		:= $(OBJ:.o=.d)
+OBJ_BONUS	:=	$(OBJ) $(addprefix $(OBJ_PATH)/,$(FILES_BONUS:.c=.o))
+DEPS		:=	$(OBJ_BONUS:.o=.d)
 
-INC_PATH	:=	inc
-CINC		:=	-I. -Iinclude
+INC_PATH	:=	include
+CINC		:=	-I. -I$(INC_PATH)
 
 MLX_PATH	:=	minilibx-linux
 MLX			:=	mlx
@@ -44,7 +49,8 @@ MLX			:=	mlx
 FT_PATH		:=	libft
 FT			:=	ft
 
-NAME	:=	fdf
+NAME		:=	fdf
+NAME_BONUS	:=	$(NAME)_bonus
 
 CC		:=	cc
 CFLAGS	:=	-Wall -Wextra -Werror
@@ -52,28 +58,34 @@ GDB		:=	-g3
 export GDB
 CLIB	:=	-L$(FT_PATH) -L$(MLX_PATH) -l$(FT) -l$(MLX) -lXext -lX11 -lm
 
-.PHONY: all
+.PHONY: all bonus
 all: $(NAME)
 
-$(NAME): $(OBJ) $(MLX_PATH)/lib$(MLX).a $(FT_PATH)/lib$(FT).a
+bonus: $(NAME_BONUS)
+
+$(NAME): $(OBJ) $(OBJ_PATH)/main.o $(MLX_PATH)/lib$(MLX).a $(FT_PATH)/lib$(FT).a
 	@echo "$(ORANGE)$(ITA)Linking$(NOITA) into $(BOLD)$@$(DEFAULT)..."
-	@$(CC) $(CFLAGS) $(GDB) $(CINC) $(OBJ) -o $@ $(CLIB) \
+	@$(CC) $(CFLAGS) $(GDB) $(CINC) $(OBJ) $(OBJ_PATH)/main.o -o $@ $(CLIB) \
+		&& echo "$(GOTO_B)$(GREEN)Successfully $(ITA)linked$(NOITA) into $(BOLD)$@$(DEFAULT)"
+
+$(NAME_BONUS): $(OBJ_BONUS) $(OBJ_PATH)/main_bonus.o $(MLX_PATH)/lib$(MLX).a $(FT_PATH)/lib$(FT).a
+	@echo "$(ORANGE)$(ITA)Linking$(NOITA) into $(BOLD)$@$(DEFAULT)..."
+	@$(CC) $(CFLAGS) $(GDB) $(CINC) $(OBJ_BONUS) $(OBJ_PATH)/main_bonus.o -o $@ $(CLIB) \
 		&& echo "$(GOTO_B)$(GREEN)Successfully $(ITA)linked$(NOITA) into $(BOLD)$@$(DEFAULT)"
 
 $(MLX_PATH)/lib$(MLX).a:
-	@echo "$(ORANGE)$(ITA)Creating$(NOITA) $(BOLD)$@$(DEFAULT)"
+	@echo "$(ORANGE)$(ITA)Creating$(NOITA) $(BOLD)$@$(DEFAULT)..."
 	@make --silent -C $(MLX_PATH) > /dev/null \
 		&& echo "$(GOTO_B)$(GREEN)Successfully $(ITA)created$(NOITA) $(BOLD)$@$(DEFAULT)"
 
 $(FT_PATH)/lib$(FT).a:
-	@echo "$(ORANGE)$(ITA)Creating$(NOITA) $(BOLD)$@$(DEFAULT)"
+	@echo "$(ORANGE)$(ITA)Creating$(NOITA) $(BOLD)$@$(DEFAULT)..."
 	@make --silent -C $(FT_PATH) \
 		&& echo "$(GOTO_B)$(GREEN)Successfully $(ITA)created$(NOITA) $(BOLD)$@$(DEFAULT)"
 
-
 -include $(DEPS)
 
-$(OBJ_PATH)/%.o: $(SRC_PATH)/%.c Makefile | $(OBJ_PATH)
+$(OBJ_PATH)/%.o: $(SRC_PATH)/%.c | $(OBJ_PATH)
 	@echo "$(ORANGE)$(ITA)Compiling$(NOITA) $(BOLD)$<$(DEFAULT)..."
 	@$(CC) $(CFLAGS) $(GDB) $(CINC) -MMD -MP -c $< -o $@ \
 		&& echo "$(GOTO_B)$(GREEN)Successfully $(ITA)compiled$(NOITA) $(BOLD)$<$(DEFAULT)"
@@ -103,5 +115,5 @@ norm:
 	@echo "$(CYAN)libft :$(DEFAULT)"
 	@make --silent norm -C $(FT_PATH)
 	@echo "$(CYAN)fdf :$(DEFAULT)"
-	@norminette -R CheckForbiddenSourceHeader $(SRC)
-	@norminette -R CheckDefine $(INCPATH)
+	@norminette -R CheckForbiddenSourceHeader $(SRC_BONUS) $(SRC_PATH)/main.c $(SRC_PATH)/main_bonus.c
+	@norminette -R CheckDefine $(INC_PATH)

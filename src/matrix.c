@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 11:09:13 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/29 19:53:29 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/03/01 18:36:56 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 t_mat4x4	mat_mult_mat(t_mat4x4 left, t_mat4x4 right)
 {
 	t_mat4x4	output;
-	size_t	i;
-	size_t	j;
+	size_t		i;
+	size_t		j;
 
 	i = 0;
 	while (i < 4)

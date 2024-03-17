@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 16:12:35 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/16 19:14:13 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/03/04 16:43:30 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-
-#include "libft/libft.h"
 
 #include "parser_utils.h"
 #include "typedefs.h"
@@ -42,6 +40,16 @@ static int	add_to_node(t_list **data, char str[], int num_values)
 	return (1);
 }
 
+static int	check_data_line(t_map *info, char str[])
+{
+	if (info->num_values != (int)ft_countwords(str, ' '))
+	{
+		ft_putendl_fd("Invalid map !", STDERR_FILENO);
+		return (0);
+	}
+	return (add_to_node(&(info->data), str, info->num_values));
+}
+
 static int	read_file(t_map *info, int fd, char str[])
 {
 	int		status;
@@ -52,13 +60,7 @@ static int	read_file(t_map *info, int fd, char str[])
 		newline = ft_strchr(str, '\n');
 		if (newline != NULL)
 			*newline = '\0';
-		status = info->num_values == (int)ft_countwords(str, ' ');
-		if (!status)
-		{
-			ft_putendl_fd("Invalid map !", STDERR_FILENO);
-			break ;
-		}
-		status = add_to_node(&(info->data), str, info->num_values);
+		status = check_data_line(info, str);
 		if (!status)
 			break ;
 		free(str);

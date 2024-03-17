@@ -1,24 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   transformations.h                                  :+:      :+:    :+:   */
+/*   render_utils.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/06 14:43:23 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/03/04 18:22:52 by pnguyen-         ###   ########.fr       */
+/*   Created: 2024/03/04 16:28:56 by pnguyen-          #+#    #+#             */
+/*   Updated: 2024/03/04 18:24:31 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef TRANSFORMATIONS_H
-# define TRANSFORMATIONS_H
+#ifndef RENDER_UTILS_H
+# define RENDER_UTILS_H
+
+# include "libft/libft.h"
 
 # include "typedefs.h"
 
-void	rotate(float output[4][4], t_trigo_table *table);
-void	translate(float output[4][4], t_vec3 *translate);
-void	scale(float output[4][4], t_vec3 *scale);
-void	isometric_transform(float output[4][4]);
-void	cabinet_transform(float output[4][4]);
+void	render_row(t_list *line, int y, t_fdf *fdf);
 
 #endif

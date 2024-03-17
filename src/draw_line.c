@@ -6,11 +6,9 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 17:50:25 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/15 19:18:32 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/03/04 18:35:21 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include <math.h>
 
 #include "typedefs.h"
 #include "draw_line_utils.h"

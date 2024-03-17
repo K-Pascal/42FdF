@@ -6,32 +6,31 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 14:41:59 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/29 20:03:03 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/03/04 17:35:56 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "typedefs.h"
+#include <math.h>
 
 void	rotate(float output[4][4], t_trigo_table *table)
 {
-	int	x = (int)table->x;
-	int	y = (int)table->y;
-	int	z = (int)table->z;
-	output[0][0] = table->trigo[y].cos * table->trigo[z].cos;
-	output[0][1] = table->trigo[x].sin * table->trigo[y].sin
-		* table->trigo[z].cos - table->trigo[x].cos * table->trigo[z].sin;
-	output[0][2] = table->trigo[x].cos * table->trigo[y].sin
-		* table->trigo[z].cos + table->trigo[x].sin * table->trigo[z].sin;
+	output[0][0] = table->y.cos * table->z.cos;
+	output[0][1] = table->x.sin * table->y.sin
+		* table->z.cos - table->x.cos * table->z.sin;
+	output[0][2] = table->x.cos * table->y.sin
+		* table->z.cos + table->x.sin * table->z.sin;
 	output[0][3] = 0.f;
-	output[1][0] = table->trigo[y].cos * table->trigo[z].sin;
-	output[1][1] = table->trigo[x].sin * table->trigo[y].sin
-		* table->trigo[z].sin + table->trigo[x].cos * table->trigo[z].cos;
-	output[1][2] = table->trigo[x].cos * table->trigo[y].sin
-		* table->trigo[z].sin - table->trigo[x].sin * table->trigo[z].cos;
+	output[1][0] = table->y.cos * table->z.sin;
+	output[1][1] = table->x.sin * table->y.sin
+		* table->z.sin + table->x.cos * table->z.cos;
+	output[1][2] = table->x.cos * table->y.sin
+		* table->z.sin - table->x.sin * table->z.cos;
 	output[1][3] = 0.f;
-	output[2][0] = -table->trigo[y].sin;
-	output[2][1] = table->trigo[x].sin * table->trigo[y].cos;
-	output[2][2] = table->trigo[x].cos * table->trigo[y].cos;
+	output[2][0] = -table->y.sin;
+	output[2][1] = table->x.sin
+		* table->y.cos;
+	output[2][2] = table->x.cos * table->y.cos;
 	output[2][3] = 0.f;
 	output[3][0] = 0.f;
 	output[3][1] = 0.f;
