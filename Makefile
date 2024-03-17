@@ -54,7 +54,7 @@ NAME_BONUS	:=	$(NAME)_bonus
 
 CC		:=	cc
 CFLAGS	:=	-Wall -Wextra -Werror
-GDB		:=	-g3
+GDB		:=	
 export GDB
 LDLIBS	:=	-l$(FT) -l$(MLX) -lXext -lX11 -lm
 LDFLAGS	:=	-L$(FT_PATH) -L$(MLX_PATH)
