@@ -45,8 +45,7 @@ FT_FILES	:=	ft_isalpha.c			\
 				ft_freeall.c			\
 				ft_isspace.c			\
 				ft_atoibase.c
-GNL_FILES	:=	get_next_line.c			\
-				get_next_line_utils.c	\
+GNL_FILES	:=	get_next_line.c
 
 OBJ_PATH	:=	build
 GNL_PATH	:=	gnl

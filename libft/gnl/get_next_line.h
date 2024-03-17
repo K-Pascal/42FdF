@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 16:36:56 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/01/19 18:58:38 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/29 17:49:26 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,21 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 32
-# else
-#  if BUFFER_SIZE < 0
-#   undef BUFFER_SIZE
-#   define BUFFER_SIZE 0
-#  endif
+#  define BUFFER_SIZE 64
 # endif
 
-typedef struct s_line
-{
-	char	*content;
-	int		len;
-	int		size;
-}	t_line;
+# if BUFFER_SIZE < 0
+#  undef BUFFER_SIZE
+#  define BUFFER_SIZE 0
+# endif
 
-int		isendl(char const s[], int n);
+# include <stddef.h>
+
+typedef struct s_str
+{
+	char	*data;
+	size_t	len;
+	size_t	size;
+}	t_str;
 
 #endif
