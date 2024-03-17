@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 15:29:56 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/15 16:11:54 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/16 19:25:53 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 #include "draw_line.h"
 #include "projections.h"
+#include "events_utils.h"
 #include "transformations.h"
 #include "typedefs.h"
-#include "utils.h"
 
 static t_vec2	render_isometric(float x, float y, float z, t_fdf *fdf)
 {
@@ -50,12 +50,13 @@ void	render(t_fdf *fdf)
 		j = 0;
 		while (j < fdf->map.num_values)
 		{
-			projection = render_isometric((float)(j - fdf->map.center.x),
-					(float)(i - fdf->map.center.y),
-					((t_value *)line->content)[j].altitudes,
+			projection = render_isometric((float)(j) - fdf->map.center.x,
+					(float)(i) - fdf->map.center.y,
+					((t_value *)line->content)[j].altitude - fdf->map.center.z,
 					fdf);
 			if (j)
-				draw_line(&fdf->img, last, projection, ((t_value *)line->content)[j].color);
+				draw_line(&fdf->img, last, projection,
+					((t_value *)line->content)[j].color);
 			if (i)
 				draw_line(&fdf->img, fdf->map.last_row[j], projection,
 					((t_value *)line->content)[j].color);

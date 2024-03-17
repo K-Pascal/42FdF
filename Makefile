@@ -3,9 +3,11 @@ FILES		:=	main.c				\
 				parser_utils.c		\
 				utils.c				\
 				draw_line.c			\
+				draw_line_utils.c	\
 				transformations.c	\
 				projections.c		\
 				events.c			\
+				events_utils.c		\
 				render.c			\
 
 SRC_PATH	:=	src

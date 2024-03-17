@@ -1,24 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.h                                            :+:      :+:    :+:   */
+/*   draw_line_utils.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/25 17:52:44 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/16 19:01:06 by pnguyen-         ###   ########.fr       */
+/*   Created: 2024/02/15 19:17:06 by pnguyen-          #+#    #+#             */
+/*   Updated: 2024/02/15 19:19:11 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef UTILS_H
-# define UTILS_H
+#ifndef DRAW_LINE_UTILS_H
+# define DRAW_LINE_UTILS_H
 
 #include "typedefs.h"
 
-void	init_mapdata(t_fdf *fdf, char pathname[]);
-void	init_mlx(t_fdf *fdf);
-void	init_trigo_table(t_trigo_table *table);
-void	deinit_prog(t_fdf *fdf);
+void	put_pixel(t_img *img, int x, int y, int color);
+int		my_abs(int nb);
 
 
 #endif

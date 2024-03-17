@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 15:20:33 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/14 16:08:37 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/16 19:05:16 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 
 #include "typedefs.h"
 #include "render.h"
-#include "utils.h"
+#include "events_utils.h"
 
 int	mouse_pressed(int button, int x, int y, t_fdf *fdf)
 {
@@ -71,27 +71,6 @@ int	key_released(int keycode, t_fdf *fdf)
 	else if (keycode == '=')
 		fdf->transform &= ~K_EQUAL;
 	return (0);
-}
-
-static void	reset_configuration(t_fdf *fdf)
-{
-	fdf->map.table.x = 0;
-	fdf->map.table.y = 0;
-	fdf->map.table.z = 0;
-	if ((fdf->img.width >> 1) <= fdf->map.num_values)
-		fdf->map.scale.x = 1;
-	else
-		fdf->map.scale.x
-			= ((float)(fdf->img.width >> 1) / (float)fdf->map.num_values);
-	if ((fdf->img.height >> 1) <= fdf->map.num_lines)
-		fdf->map.scale.y = 1.f;
-	else
-		fdf->map.scale.y
-			= ((float)(fdf->img.height >> 1) / (float)fdf->map.num_lines);
-	fdf->map.scale.z = min(fdf->map.scale.x, fdf->map.scale.y);
-	fdf->map.translate.x = 0.f;
-	fdf->map.translate.y = 0.f;
-	fdf->map.translate.z = 0.f;
 }
 
 int	key_pressed(int keycode, t_fdf *fdf)
