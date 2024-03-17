@@ -1,74 +1,84 @@
-SOURCES := ft_isalpha.c \
-		   ft_isdigit.c \
-		   ft_isalnum.c \
-		   ft_isascii.c \
-		   ft_isprint.c \
-		   ft_strlen.c \
-		   ft_memset.c \
-		   ft_bzero.c \
-		   ft_memcpy.c \
-		   ft_memmove.c \
-		   ft_strlcpy.c \
-		   ft_strlcat.c \
-		   ft_toupper.c \
-		   ft_tolower.c \
-		   ft_strchr.c \
-		   ft_strrchr.c \
-		   ft_strncmp.c \
-		   ft_memchr.c \
-		   ft_memcmp.c \
-		   ft_strnstr.c \
-		   ft_atoi.c \
-		   ft_calloc.c \
-		   ft_strdup.c \
-		   ft_substr.c \
-		   ft_strjoin.c \
-		   ft_strtrim.c \
-		   ft_split.c \
-		   ft_itoa.c \
-		   ft_strmapi.c \
-		   ft_striteri.c \
-		   ft_putchar_fd.c \
-		   ft_putstr_fd.c \
-		   ft_putendl_fd.c \
-		   ft_putnbr_fd.c
+FT_FILES	:=	ft_isalpha.c			\
+				ft_isdigit.c			\
+				ft_isalnum.c			\
+				ft_isascii.c			\
+				ft_isprint.c			\
+				ft_strlen.c				\
+				ft_memset.c				\
+				ft_bzero.c				\
+				ft_memcpy.c				\
+				ft_memmove.c			\
+				ft_strlcpy.c			\
+				ft_strlcat.c			\
+				ft_toupper.c			\
+				ft_tolower.c			\
+				ft_strchr.c				\
+				ft_strrchr.c			\
+				ft_strncmp.c			\
+				ft_memchr.c				\
+				ft_memcmp.c				\
+				ft_strnstr.c			\
+				ft_atoi.c				\
+				ft_calloc.c				\
+				ft_strdup.c				\
+				ft_substr.c				\
+				ft_strjoin.c			\
+				ft_strtrim.c			\
+				ft_split.c				\
+				ft_itoa.c				\
+				ft_strmapi.c			\
+				ft_striteri.c			\
+				ft_putchar_fd.c			\
+				ft_putstr_fd.c			\
+				ft_putendl_fd.c			\
+				ft_putnbr_fd.c			\
+				ft_lstnew.c				\
+				ft_lstadd_front.c		\
+				ft_lstsize.c			\
+				ft_lstlast.c			\
+				ft_lstadd_back.c		\
+				ft_lstdelone.c			\
+				ft_lstclear.c			\
+				ft_lstiter.c			\
+				ft_lstmap.c
+GNL_FILES	:=	get_next_line.c			\
+				get_next_line_utils.c	\
 
-SOURCES_BONUS := ft_lstnew.c \
-				 ft_lstadd_front.c \
-				 ft_lstsize.c \
-				 ft_lstlast.c \
-				 ft_lstadd_back.c \
-				 ft_lstdelone.c \
-				 ft_lstclear.c \
-				 ft_lstiter.c \
-				 ft_lstmap.c
+OBJ_PATH	:=	build
+GNL_PATH	:=	gnl
 
-OBJECTS := $(SOURCES:.c=.o)
+FT_SRC		:=	$(FT_FILES)
+GNL_SRC		:=	$(addprefix $(GNL_PATH)/,$(GNL_FILES))
 
-OBJECTS_BONUS := $(SOURCES_BONUS:.c=.o)
+GNL_OBJ		:=	$(addprefix $(OBJ_PATH)/,$(GNL_FILES:.c=.o))
+FT_OBJ		:=	$(addprefix $(OBJ_PATH)/,$(FT_FILES:.c=.o))
 
-CC := cc
-CFLAGS := -Wall -Wextra -Werror
-GDB ?= 
+OBJ			:=	$(GNL_OBJ) $(FT_OBJ)
+
+CC		:=	cc
+CFLAGS	:=	-Wall -Wextra -Werror
+GDB		?=
 
 NAME := libft.a
 
 .PHONY: all bonus
 all: $(NAME)
 
-bonus: $(NAME) $(OBJECTS_BONUS)
-	ar -rcs $(NAME) $(OBJECTS_BONUS)
+$(NAME): $(OBJ)
+	ar -rcs $@ $^
 
-$(NAME): $(OBJECTS)
-	ar -rcs $(NAME) $^
+$(OBJ_PATH)/%.o: %.c | $(OBJ_PATH)
+	$(CC) $(CFLAGS) $(GDB) -I. -c $< -o $@
 
-%.o: %.c
-	$(CC) $(CFLAGS) $(GDB) -c $< -o $@
+$(OBJ_PATH)/%.o: $(GNL_PATH)/%.c | $(OBJ_PATH)
+	$(CC) $(CFLAGS) $(GDB) -I. -Ignl -c $< -o $@
+
+$(OBJ_PATH):
+	@mkdir -p $@
 
 .PHONY: clean fclean re
 clean:
-	rm -f $(OBJECTS)
-	rm -f $(OBJECTS_BONUS)
+	rm -f $(OBJ)
 
 fclean: clean
 	rm -f $(NAME)
@@ -77,5 +87,5 @@ re: fclean all
 
 .PHONY: norm
 norm:
-	norminette -R CheckForbiddenSourceHeader $(SOURCES) $(SOURCES_BONUS)
+	norminette -R CheckForbiddenSourceHeader $(FT_SRC) $(GNL_SRC)
 	norminette -R CheckDefine libft.h
