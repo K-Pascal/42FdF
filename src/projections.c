@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 14:45:15 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/12 18:45:41 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/13 18:15:05 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,14 @@ void	isometric_transform(t_vec3 *output, t_vec3 input)
 	input.z += input.y;
 	input.y -= input.z;
 	output->x = invsqrt_6 * sqrt_3 * (
-				input.x
-				- input.z);
+			input.x
+			- input.z);
 	output->y = invsqrt_6 * (
-				input.x
-				+ (2.f * input.y)
-				+ input.z);
+			input.x
+			+ (2.f * input.y)
+			+ input.z);
 	output->z = invsqrt_6 * sqrt_2 * (
-				input.x
-				- input.y
-				+ input.z);
+			input.x
+			- input.y
+			+ input.z);
 }

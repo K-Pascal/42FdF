@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 15:20:33 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/13 15:36:50 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/13 18:40:46 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 #include "render.h"
 #include "utils.h"
 
-int mouse_pressed(int button, int x, int y, t_fdf *fdf)
+int	mouse_pressed(int button, int x, int y, t_fdf *fdf)
 {
 	(void)x;
 	(void)y;
@@ -30,7 +30,7 @@ int mouse_pressed(int button, int x, int y, t_fdf *fdf)
 		fdf->map.scale.y *= 1.1f;
 		fdf->map.scale.z *= 1.1f;
 		reset_map(fdf);
-		render_isometric(fdf);
+		render(fdf);
 	}
 	else if (button == Button5)
 	{
@@ -38,7 +38,7 @@ int mouse_pressed(int button, int x, int y, t_fdf *fdf)
 		fdf->map.scale.y *= 0.9f;
 		fdf->map.scale.z *= 0.9f;
 		reset_map(fdf);
-		render_isometric(fdf);
+		render(fdf);
 	}
 	return (1);
 }
@@ -68,6 +68,27 @@ int	key_released(int keycode, t_fdf *fdf)
 	return (0);
 }
 
+void	reset_configuration(t_fdf *fdf)
+{
+	fdf->map.table.x = 0;
+	fdf->map.table.y = 0;
+	fdf->map.table.z = 0;
+	if ((fdf->img.width >> 1) <= fdf->map.num_values)
+		fdf->map.scale.x = 1;
+	else
+		fdf->map.scale.x
+			= ((float)(fdf->img.width >> 1) / (float)fdf->map.num_values);
+	if ((fdf->img.height >> 1) <= fdf->map.num_lines)
+		fdf->map.scale.y = 1.f;
+	else
+		fdf->map.scale.y
+			= ((float)(fdf->img.height >> 1) / (float)fdf->map.num_lines);
+	fdf->map.scale.z = 1.f;
+	fdf->map.translate.x = 0.f;
+	fdf->map.translate.y = 0.f;
+	fdf->map.translate.z = 0.f;
+}
+
 int	key_pressed(int keycode, t_fdf *fdf)
 {
 	if (!keycode)
@@ -76,23 +97,9 @@ int	key_pressed(int keycode, t_fdf *fdf)
 		mlx_loop_end(fdf->mlx_ptr);
 	else if (keycode == '0')
 	{
-		fdf->map.table.x = 0;
-		fdf->map.table.y = 0;
-		fdf->map.table.z = 0;
-		if ((fdf->img.width >> 1) <= fdf->map.num_values)
-			fdf->map.scale.x = 1;
-		else
-			fdf->map.scale.x = ((float)(fdf->img.width >> 1) / (float)fdf->map.num_values);
-		if ((fdf->img.height >> 1) <= fdf->map.num_lines)
-			fdf->map.scale.y = 1.f;
-		else
-			fdf->map.scale.y = ((float)(fdf->img.height >> 1) / (float)fdf->map.num_lines);
-		fdf->map.scale.z = 1.f;
-		fdf->map.translate.x = 0.f;
-		fdf->map.translate.y = 0.f;
-		fdf->map.translate.z = 0.f;
+		reset_configuration(fdf);
 		reset_map(fdf);
-		render_isometric(fdf);
+		render(fdf);
 	}
 	else if (keycode == 'd')
 		fdf->transform |= K_D;

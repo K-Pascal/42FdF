@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 15:29:56 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/13 15:38:02 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/13 18:39:53 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,36 +18,47 @@
 #include "typedefs.h"
 #include "utils.h"
 
-void	render_isometric(t_fdf *fdf)
+static t_vec2	render_isometric(float x, float y, float z, t_fdf *fdf)
+{
+	t_vec3	point3d;
+	t_vec3	transformation;
+	t_vec2	projection;
+
+	point3d.x = x;
+	point3d.y = y;
+	point3d.z = z;
+	scale(&transformation, point3d, &fdf->map.scale);
+	rotate(&transformation, transformation, &fdf->map.table);
+	isometric_transform(&transformation, transformation);
+	translate(&transformation, transformation, &fdf->map.translate);
+	orthographic_projection(&projection, fdf, transformation);
+	return (projection);
+}
+
+void	render(t_fdf *fdf)
 {
 	int		i;
 	int		j;
 	int		k;
+	t_vec2	last;
+	t_vec2	projection;
 
 	i = 0;
 	k = 0;
 	while (i < fdf->map.num_lines)
 	{
-		t_vec2	last;
 		j = 0;
 		while (j < fdf->map.num_values)
 		{
-			t_vec3 point3d = {
-				j - fdf->map.center.x,
-				i - fdf->map.center.y,
-				fdf->map.data[k].altitudes
-			};
-			t_vec3 transformation;
-			scale(&transformation, point3d, &fdf->map.scale);
-			rotate(&transformation, transformation, &fdf->map.table);
-			isometric_transform(&transformation, transformation);
-			translate(&transformation, transformation, &fdf->map.translate);
-			t_vec2 projection;
-			orthographic_projection(&projection, fdf, transformation);
+			projection = render_isometric((float)(i - fdf->map.center.x),
+					(float)(j - fdf->map.center.y),
+					(float)(fdf->map.data[k].altitudes),
+					fdf);
 			if (j)
 				draw_line(&fdf->img, last, projection, fdf->map.data[k].color);
 			if (i)
-				draw_line(&fdf->img, fdf->map.last_row[j], projection, fdf->map.data[k].color);
+				draw_line(&fdf->img, fdf->map.last_row[j], projection,
+					fdf->map.data[k].color);
 			last = projection;
 			fdf->map.last_row[j] = last;
 			j++;
@@ -58,7 +69,7 @@ void	render_isometric(t_fdf *fdf)
 	mlx_put_image_to_window(fdf->mlx_ptr, fdf->win.ptr, fdf->img.ptr, 0, 0);
 }
 
-int update_frame(t_fdf *fdf)
+int	update_frame(t_fdf *fdf)
 {
 	if (!fdf->transform || fdf->transform == K_MOD)
 		return (0);
@@ -123,6 +134,6 @@ int update_frame(t_fdf *fdf)
 			fdf->map.scale.z = 0.125f;
 	}
 	reset_map(fdf);
-	render_isometric(fdf);
+	render(fdf);
 	return (0);
 }

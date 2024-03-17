@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 16:12:35 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/12 17:12:24 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/13 18:23:25 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,29 @@ static char	parse_mapinfo(t_map *info, int fd)
 	return (1);
 }
 
+char	*parse_values(t_value data[], size_t index, char str[])
+{
+	data[index].altitudes = (float)ft_atoi(str);
+	if (*str == '+' || *str == '-')
+		str++;
+	while (ft_isdigit(*str))
+		str++;
+	if (*str == ',')
+	{
+		str++;
+		if (*str == '0')
+			str++;
+		if (*str == 'x' || *str == 'X')
+			str++;
+		data[index].color = ft_atoibase(str, "0123456789abcdef");
+		if (data[index].color == 0)
+			data[index].color = ft_atoibase(str, "0123456789ABCDEF");
+	}
+	else
+		data[index].color = 0xFFFFFFFF;
+	return (str);
+}
+
 void	store_mapvalue(t_value data[], char str[])
 {
 	size_t	i;
@@ -60,24 +83,7 @@ void	store_mapvalue(t_value data[], char str[])
 			str++;
 		if (*str == '\0')
 			break ;
-		data[i].altitudes = (float)ft_atoi(str);
-		if (*str == '+' || *str == '-')
-			str++;
-		while (ft_isdigit(*str))
-			str++;
-		if (*str == ',')
-		{
-			str++;
-			if (*str == '0')
-				str++;
-			if (*str == 'x' || *str == 'X')
-				str++;
-			data[i].color = ft_atoibase(str, "0123456789abcdef");
-			if (data[i].color == 0)
-				data[i].color = ft_atoibase(str, "0123456789ABCDEF");
-		}
-		else
-			data[i].color = 0xFFFFFFFF;
+		str = parse_values(data, i, str);
 		while (*str != '\0' && !ft_isspace(*str))
 			str++;
 		i++;
