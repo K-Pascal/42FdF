@@ -195,12 +195,12 @@ int	main(int argc, char **argv)
 	init_mlx(&fdf);
 	fdf.map.pos.x = fdf.img.width >> 1;
 	fdf.map.pos.y = fdf.img.height >> 1;
-	fdf.map.translate.x = 0;
-	fdf.map.translate.y = 0;
-	fdf.map.translate.z = 0;
+	fdf.map.translate.x = 0.f;
+	fdf.map.translate.y = 0.f;
+	fdf.map.translate.z = 0.f;
 	fdf.transform = K_NONE;
 	if ((fdf.img.width >> 1) <= fdf.map.num_values)
-		fdf.map.scale.x = 1;
+		fdf.map.scale.x = 1.f;
 	else
 		fdf.map.scale.x = ((float)(fdf.img.width >> 1) / (float)fdf.map.num_values);
 	if ((fdf.img.height >> 1) <= fdf.map.num_lines)

@@ -6,19 +6,18 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 17:50:25 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/12 17:08:02 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/13 15:23:24 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <math.h>
-#include <stdlib.h>
 
 #include "typedefs.h"
 #include "utils.h"
 
-static char	init_datalow(t_vec2 *dst, t_vec2 *start, t_vec2 *end)
+static int	init_datalow(t_vec2 *dst, t_vec2 *start, t_vec2 *end)
 {
-	char	yi;
+	int	yi;
 
 	dst->x = end->x - start->x;
 	dst->y = end->y - start->y;
@@ -31,9 +30,9 @@ static char	init_datalow(t_vec2 *dst, t_vec2 *start, t_vec2 *end)
 	return (yi);
 }
 
-static char	init_datahigh(t_vec2 *dst, t_vec2 *start, t_vec2 *end)
+static int	init_datahigh(t_vec2 *dst, t_vec2 *start, t_vec2 *end)
 {
-	char	xi;
+	int	xi;
 
 	dst->x = end->x - start->x;
 	dst->y = end->y - start->y;
@@ -50,7 +49,7 @@ static void	draw_linelow(t_img *img, t_vec2 start, t_vec2 end, int color)
 {
 	t_vec2	dst;
 	int		error;
-	char	yi;
+	int		yi;
 
 	yi = init_datalow(&dst, &start, &end);
 	error = 2 * dst.y - dst.x;
@@ -75,7 +74,7 @@ static void	draw_linehigh(t_img *img, t_vec2 start, t_vec2 end, int color)
 {
 	t_vec2	dst;
 	int		error;
-	char	xi;
+	int		xi;
 
 	xi = init_datahigh(&dst, &start, &end);
 	error = 2 * dst.x - dst.y;
@@ -98,7 +97,7 @@ static void	draw_linehigh(t_img *img, t_vec2 start, t_vec2 end, int color)
 
 void	draw_line(t_img *img, t_vec2 start, t_vec2 end, int color)
 {
-	if (abs(end.y - start.y) < abs(end.x - start.x))
+	if (my_abs(end.y - start.y) < my_abs(end.x - start.x))
 	{
 		if (start.x > end.x)
 			draw_linelow(img, end, start, color);
