@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 18:50:46 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/09 17:42:37 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/13 14:58:31 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,34 +39,27 @@ void	render_isometric(t_fdf *fdf)
 	k = 0;
 	while (i < fdf->map.num_lines)
 	{
-		t_vec3	last;
+		t_vec2	last;
 		j = 0;
 		while (j < fdf->map.num_values)
 		{
 			t_vec3 point3d = {
 				j - fdf->map.center.x,
 				i - fdf->map.center.y,
-				fdf->map.altitudes[k]
+				fdf->map.data[k].altitudes
 			};
 			t_vec3 transformation;
 			scale(&transformation, point3d, &fdf->map.scale);
 			rotate(&transformation, transformation, &fdf->map.table);
-			isometric_transform(&transformation, transformation, &fdf->map);
+			isometric_transform(&transformation, transformation);
 			translate(&transformation, transformation, &fdf->map.translate);
 			t_vec2 projection;
 			orthographic_projection(&projection, fdf, transformation);
-			t_vec2 last_proj;
 			if (j)
-			{
-				orthographic_projection(&last_proj, fdf, last);
-				draw_line(&fdf->img, last_proj, projection, 0xFFFFFFFF);
-			}
+				draw_line(&fdf->img, last, projection, fdf->map.data[k].color);
 			if (i)
-			{
-				orthographic_projection(&last_proj, fdf, fdf->map.last_row[j]);
-				draw_line(&fdf->img, last_proj, projection, 0xFFFFFFFF);
-			}
-			last = transformation;
+				draw_line(&fdf->img, fdf->map.last_row[j], projection, fdf->map.data[k].color);
+			last = projection;
 			fdf->map.last_row[j] = last;
 			j++;
 			k++;
@@ -252,15 +245,15 @@ int update_frame(t_fdf *fdf)
 	}
 	if (fdf->transform & K_Q && !(fdf->transform & K_MOD))
 	{
-		fdf->map.table.z--;
-		if (fdf->map.table.z < 0)
-			fdf->map.table.z = SIZE_TRIGO_TABLE - 1;
-	}
-	if (fdf->transform & K_E && !(fdf->transform & K_MOD))
-	{
 		fdf->map.table.z++;
 		if (fdf->map.table.z >= SIZE_TRIGO_TABLE)
 			fdf->map.table.z = 0;
+	}
+	if (fdf->transform & K_E && !(fdf->transform & K_MOD))
+	{
+		fdf->map.table.z--;
+		if (fdf->map.table.z < 0)
+			fdf->map.table.z = SIZE_TRIGO_TABLE - 1;
 	}
 	if (fdf->transform & K_W && fdf->transform & K_MOD)
 		fdf->map.translate.y--;
@@ -391,7 +384,7 @@ void	init_mapdata(t_fdf *fdf, char pathname[])
 	get_mapinfo(&fdf->map, pathname);
 	if (!get_mapdata(&fdf->map, pathname))
 	{
-		free(fdf->map.altitudes);
+		free(fdf->map.data);
 		free(fdf->map.last_row);
 		exit(EXIT_FAILURE);
 	}
@@ -399,7 +392,7 @@ void	init_mapdata(t_fdf *fdf, char pathname[])
 	if (fdf->map.last_row == NULL)
 	{
 		perror("malloc()");
-		free(fdf->map.altitudes);
+		free(fdf->map.data);
 		exit(EXIT_FAILURE);
 	}
 	fdf->map.center.x = (float)(fdf->map.num_values >> 1);
@@ -412,7 +405,7 @@ void	init_mlx(t_fdf *fdf)
 	if (!start_mlx(fdf))
 	{
 		ft_putendl_fd("Failed to initialize mlx", STDERR_FILENO);
-		free(fdf->map.altitudes);
+		free(fdf->map.data);
 		free(fdf->map.last_row);
 		exit(EXIT_FAILURE);
 	}
@@ -429,7 +422,7 @@ void	init_mlx(t_fdf *fdf)
 
 void	deinit_prog(t_fdf *fdf)
 {
-	free(fdf->map.altitudes);
+	free(fdf->map.data);
 	free(fdf->map.last_row);
 	mlx_destroy_image(fdf->mlx_ptr, fdf->img.ptr);
 	mlx_destroy_window(fdf->mlx_ptr, fdf->win.ptr);
@@ -451,6 +444,7 @@ int	main(int argc, char **argv)
 	fdf.map.translate.x = 0;
 	fdf.map.translate.y = 0;
 	fdf.map.translate.z = 0;
+	fdf.transform = K_NONE;
 	if ((fdf.img.width >> 1) <= fdf.map.num_values)
 		fdf.map.scale.x = 1;
 	else

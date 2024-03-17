@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 16:12:35 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/08 20:34:53 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/12 17:12:24 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,19 +49,36 @@ static char	parse_mapinfo(t_map *info, int fd)
 	return (1);
 }
 
-void	store_mapvalue(int altitudes[], char str[])
+void	store_mapvalue(t_value data[], char str[])
 {
 	size_t	i;
 
 	i = 0;
 	while (*str != '\0')
 	{
-		while (*str == ' ' || *str == '\n')
+		while (ft_isspace(*str))
 			str++;
 		if (*str == '\0')
 			break ;
-		altitudes[i] = ft_atoi(str);
-		while (*str != ' ' && *str != '\n' && *str != '\0')
+		data[i].altitudes = (float)ft_atoi(str);
+		if (*str == '+' || *str == '-')
+			str++;
+		while (ft_isdigit(*str))
+			str++;
+		if (*str == ',')
+		{
+			str++;
+			if (*str == '0')
+				str++;
+			if (*str == 'x' || *str == 'X')
+				str++;
+			data[i].color = ft_atoibase(str, "0123456789abcdef");
+			if (data[i].color == 0)
+				data[i].color = ft_atoibase(str, "0123456789ABCDEF");
+		}
+		else
+			data[i].color = 0xFFFFFFFF;
+		while (*str != '\0' && !ft_isspace(*str))
 			str++;
 		i++;
 	}
@@ -84,7 +101,7 @@ static char	parse_mapdata(t_map *map, int fd)
 				ft_putendl_fd("Incomplete map !", STDERR_FILENO);
 			return (0);
 		}
-		store_mapvalue(&map->altitudes[i * map->num_values], str);
+		store_mapvalue(&map->data[i * map->num_values], str);
 		free(str);
 		i++;
 	}
@@ -109,8 +126,8 @@ void	get_mapinfo(t_map *info, char const pathname[])
 		perror("get_mapinfo():close()");
 	if (!status)
 		exit(EXIT_FAILURE);
-	info->altitudes = ft_calloc(info->num_lines * info->num_values, sizeof(int));
-	if (info->altitudes == NULL)
+	info->data = ft_calloc(info->num_lines * info->num_values, sizeof(t_value));
+	if (info->data == NULL)
 	{
 		perror("malloc()");
 		exit(EXIT_FAILURE);

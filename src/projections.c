@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 14:45:15 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/09 17:37:11 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/12 18:45:41 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,8 @@ void	orthographic_projection(t_vec2 *output, t_fdf *fdf, t_vec3 point3d)
 	output->y = point3d.y + fdf->map.pos.y;
 }
 
-void	isometric_transform(t_vec3 *output, t_vec3 input, t_map *map)
+void	isometric_transform(t_vec3 *output, t_vec3 input)
 {
-	(void)map;
 	float const	invsqrt_6 = 0.40825f;
 	float const	sqrt_3 = 1.73205f;
 	float const	sqrt_2 = 1.41421f;

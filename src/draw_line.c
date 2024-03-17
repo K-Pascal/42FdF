@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 17:50:25 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/07 20:24:46 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/12 17:08:02 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static char	init_datalow(t_vec2 *dst, t_vec2 *start, t_vec2 *end)
 	yi = 1;
 	if (dst->y < 0)
 	{
-		dst->y = ~dst->y + 1;
+		dst->y = -dst->y;
 		yi = -1;
 	}
 	return (yi);
@@ -40,7 +40,7 @@ static char	init_datahigh(t_vec2 *dst, t_vec2 *start, t_vec2 *end)
 	xi = 1;
 	if (dst->x < 0)
 	{
-		dst->x = ~dst->x + 1;
+		dst->x = -dst->x;
 		xi = -1;
 	}
 	return (xi);
