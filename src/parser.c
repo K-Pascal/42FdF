@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 16:12:35 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/01/29 18:03:03 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/05 15:34:19 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,25 +19,6 @@
 
 #include "typedefs.h"
 
-size_t	count_values(char const str[], char const c)
-{
-	size_t	count;
-
-	count = 0;
-	while (*str != '\0')
-	{
-		if (*str != c)
-		{
-			count++;
-			while (*str != '\0' && *str != c)
-				str++;
-		}
-		else
-			str++;
-	}
-	return (count);
-}
-
 char	read_file_info(int fd, t_info *info)
 {
 	char	*str;
@@ -48,11 +29,11 @@ char	read_file_info(int fd, t_info *info)
 		perror("get_next_line()");
 		return (0);
 	}
-	info->num_values = count_values(str, ' ');
+	info->num_values = ft_countwords(str, ' ');
 	while (str != NULL)
 	{
 		info->num_lines++;
-		if (info->num_values != count_values(str, ' '))
+		if (info->num_values != ft_countwords(str, ' '))
 		{
 			ft_putendl_fd("Invalid map !", STDOUT_FILENO);
 			free(str);
@@ -80,20 +61,6 @@ void	get_info(char const pathname[], t_info *info)
 		perror("close()");
 	if (!status)
 		exit(EXIT_FAILURE);
-}
-
-void	my_free_all(char **str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] != NULL)
-	{
-		free(str[i]);
-		str[i] = NULL;
-		i++;
-	}
-	free(str);
 }
 
 int	*get_map(char const pathname[], t_info *info)
@@ -145,7 +112,7 @@ int	*get_map(char const pathname[], t_info *info)
 			arr_int[i * info->num_values + j] = ft_atoi(arr_str[j]);
 			j++;
 		}
-		my_free_all(arr_str);
+		ft_freeall(arr_str);
 		i++;
 	}
 	close(fd);

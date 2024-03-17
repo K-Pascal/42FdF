@@ -40,7 +40,9 @@ FT_FILES	:=	ft_isalpha.c			\
 				ft_lstdelone.c			\
 				ft_lstclear.c			\
 				ft_lstiter.c			\
-				ft_lstmap.c
+				ft_lstmap.c				\
+				ft_countwords.c			\
+				ft_freeall.c
 GNL_FILES	:=	get_next_line.c			\
 				get_next_line_utils.c	\
 
