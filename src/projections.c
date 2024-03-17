@@ -6,9 +6,11 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 14:45:15 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/14 16:06:51 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/22 17:11:58 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include <math.h>
 
 #include "transformations.h"
 #include "typedefs.h"
@@ -19,24 +21,27 @@ void	orthographic_projection(t_vec2 *output, t_fdf *fdf, t_vec3 point3d)
 	output->y = point3d.y + fdf->map.pos.y;
 }
 
-void	isometric_transform(t_vec3 *output, t_vec3 input)
+void	perspective_projection(float output[4][4], t_img *img)
 {
-	float const	invsqrt_6 = 0.40825f;
-	float const	sqrt_3 = 1.73205f;
-	float const	sqrt_2 = 1.41421f;
+	float const	aspect_ratio = (float)img->height / (float)img->width;
+	float const fov = 1.f / tanf(3.14159f / 144.f);
+	float const	z_far = 1000.f;
+	float const z_near = .1f;
 
-	input.y -= input.z;
-	input.z += input.y;
-	input.y -= input.z;
-	output->x = invsqrt_6 * sqrt_3 * (
-			input.x
-			- input.z);
-	output->y = invsqrt_6 * (
-			input.x
-			+ (2.f * input.y)
-			+ input.z);
-	output->z = invsqrt_6 * sqrt_2 * (
-			input.x
-			- input.y
-			+ input.z);
+	output[0][0] = aspect_ratio * fov;
+	output[0][1] = 0.f;
+	output[0][2] = 0.f;
+	output[0][3] = 0.f;
+	output[1][0] = 0.f;
+	output[1][1] = fov;
+	output[1][2] = 0.f;
+	output[1][3] = 0.f;
+	output[2][0] = 0.f;
+	output[2][1] = 0.f;
+	output[2][2] = z_far / (z_far - z_near);
+	output[2][3] = 1.f;
+	output[3][0] = 0.f;
+	output[3][1] = 0.f;
+	output[3][2] = (-z_far * z_near) / (z_far - z_near);
+	output[3][3] = 0.f;
 }

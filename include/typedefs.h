@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 16:54:41 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/15 19:32:48 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/22 11:25:06 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ typedef struct s_map
 	t_vec3			translate;
 	t_vec3			scale;
 	t_vec3			center;
-	t_vec2			*last_row;
+	t_vec3			*last_row;
 }	t_map;
 
 typedef enum e_transform
