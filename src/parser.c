@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 16:12:35 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/02/08 18:42:11 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/08 20:23:15 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,32 +49,28 @@ static char	parse_mapinfo(t_map *info, int fd)
 	return (1);
 }
 
-static char	store_mapvalue(int arr_ints[], char str[])
+void	store_mapvalue(int altitudes[], char str[])
 {
-	int		i;
-	char	**arr_str;
+	size_t	i;
 
-	arr_str = ft_split(str, ' ');
-	if (arr_str == NULL)
-	{
-		perror("store_mapvalue():ft_split()");
-		return (0);
-	}
 	i = 0;
-	while (arr_str[i] != NULL)
+	while (*str != '\0')
 	{
-		arr_ints[i] = ft_atoi(arr_str[i]);
+		while (*str == ' ' || *str == '\n')
+			str++;
+		if (*str == '\0')
+			break ;
+		altitudes[i] = ft_atoi(str);
+		while (*str != ' ' && *str != '\n' && *str != '\0')
+			str++;
 		i++;
 	}
-	ft_freeall(arr_str);
-	return (1);
 }
 
 static char	parse_mapdata(t_map *map, int fd)
 {
 	int		i;
 	char	*str;
-	char	status;
 
 	i = 0;
 	while (i < map->num_lines)
@@ -88,10 +84,8 @@ static char	parse_mapdata(t_map *map, int fd)
 				ft_putendl_fd("Incomplete map !", STDERR_FILENO);
 			return (0);
 		}
-		status = store_mapvalue(&map->altitudes[i * map->num_values], str);
+		store_mapvalue(&map->altitudes[i * map->num_values], str);
 		free(str);
-		if (!status)
-			return (0);
 		i++;
 	}
 	return (1);
