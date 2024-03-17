@@ -6,7 +6,7 @@
 /*   By: pnguyen- <pnguyen-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 17:50:25 by pnguyen-          #+#    #+#             */
-/*   Updated: 2024/01/29 17:24:53 by pnguyen-         ###   ########.fr       */
+/*   Updated: 2024/02/05 19:59:27 by pnguyen-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,96 +16,100 @@
 #include "typedefs.h"
 #include "utils.h"
 
-static void	draw_line_low(t_img *img, t_vec2 *start, t_vec2 *end)
+static char	init_datalow(t_vec2 *dst, t_vec2 *start, t_vec2 *end)
 {
-	int	dx;
-	int	dy;
-	int	error;
-	int	yi;
+	char	yi;
 
-	dx = end->x - start->x;
-	dy = end->y - start->y;
+	dst->x = end->x - start->x;
+	dst->y = end->y - start->y;
 	yi = 1;
-	if (dy < 0)
+	if (dst->y < 0)
 	{
-		dy = -dy;
+		dst->y = ~dst->y + 1;
 		yi = -1;
 	}
-	error = 2 * dy - dx;
-	int	x;
-	int	y;
-
-	x = start->x;
-	y = start->y;
-	while (x <= end->x)
-	{
-		if (x >= img->width || y >= img->height)
-			break ;
-		if (x >= 0 && y >= 0)
-			put_pixel(img, x, y, 0XFFFFFFFF);
-		if (error > 0)
-		{
-			y += yi;
-			error += 2 * (dy - dx);
-		}
-		else
-			error += 2 * dy;
-		x++;
-	}
+	return (yi);
 }
 
-static void	draw_line_high(t_img *img, t_vec2 *start, t_vec2 *end)
+static char	init_datahigh(t_vec2 *dst, t_vec2 *start, t_vec2 *end)
 {
-	int	dx;
-	int	dy;
-	int	error;
-	int	xi;
+	char	xi;
 
-	dx = end->x - start->x;
-	dy = end->y - start->y;
+	dst->x = end->x - start->x;
+	dst->y = end->y - start->y;
 	xi = 1;
-	if (dx < 0)
+	if (dst->x < 0)
 	{
-		dx = -dx;
+		dst->x = ~dst->x + 1;
 		xi = -1;
 	}
-	error = 2 * dx - dy;
-	int	x;
-	int	y;
+	return (xi);
+}
 
-	x = start->x;
-	y = start->y;
-	while (y <= end->y)
+static void	draw_linelow(t_img *img, t_vec2 start, t_vec2 end)
+{
+	t_vec2	dst;
+	int		error;
+	char	yi;
+
+	yi = init_datalow(&dst, &start, &end);
+	error = 2 * dst.y - dst.x;
+	while (start.x <= end.x)
 	{
-		if (x >= img->width || y >= img->height)
+		if (start.x >= img->width)
 			break ;
-		if (x >= 0 && y >= 0)
-			put_pixel(img, x, y, 0X00FFFFFFFF);
+		if (start.x >= 0 && start.y >= 0 && start.y < img->height)
+			put_pixel(img, start.x, start.y, 0XFFFFFFFF);
 		if (error > 0)
 		{
-			x += xi;
-			error += 2 * (dx - dy);
+			start.y += yi;
+			error += 2 * (dst.y - dst.x);
 		}
 		else
-			error += 2 * dx;
-		y++;
+			error += 2 * dst.y;
+		start.x++;
 	}
 }
 
-void	draw_line(t_img *img, t_vec2 *start, t_vec2 *end)
+static void	draw_linehigh(t_img *img, t_vec2 start, t_vec2 end)
 {
-	if (abs(end->y - start->y) < abs(end->x - start->x))
+	t_vec2	dst;
+	int		error;
+	char	xi;
+
+	xi = init_datahigh(&dst, &start, &end);
+	error = 2 * dst.x - dst.y;
+	while (start.y <= end.y)
 	{
-		if (start->x > end->x)
-			draw_line_low(img, end, start);
+		if (start.y >= img->height)
+			break ;
+		if (start.x >= 0 && start.y >= 0 && start.x < img->width)
+			put_pixel(img, start.x, start.y, 0X00FFFFFF);
+		if (error > 0)
+		{
+			start.x += xi;
+			error += 2 * (dst.x - dst.y);
+		}
 		else
-			draw_line_low(img, start, end);
+			error += 2 * dst.x;
+		start.y++;
+	}
+}
+
+void	draw_line(t_img *img, t_vec2 start, t_vec2 end)
+{
+	if (abs(end.y - start.y) < abs(end.x - start.x))
+	{
+		if (start.x > end.x)
+			draw_linelow(img, end, start);
+		else
+			draw_linelow(img, start, end);
 	}
 	else
 	{
-		if (start->y > end->y)
-			draw_line_high(img, end, start);
+		if (start.y > end.y)
+			draw_linehigh(img, end, start);
 		else
-			draw_line_high(img, start, end);
+			draw_linehigh(img, start, end);
 	}
 }

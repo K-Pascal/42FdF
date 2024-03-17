@@ -165,32 +165,17 @@ void	draw_cube(t_fdf *fdf, t_vec2 pos, int length)
 		for (int i = 0; i < 8; i++)
 		{
 			if ((i + 1) % 4 != 0)
-				draw_line(&fdf->img, &projected[i], &projected[i + 1]);
+				draw_line(&fdf->img, projected[i], projected[i + 1]);
 			else
-				draw_line(&fdf->img, &projected[i], &projected[4 * (i / 4)]);
+				draw_line(&fdf->img, projected[i], projected[4 * (i / 4)]);
 			if (i < 4)
-				draw_line(&fdf->img, &projected[i], &projected[i + 4]);
+				draw_line(&fdf->img, projected[i], projected[i + 4]);
 		}
 		mlx_put_image_to_window(fdf->mlx_ptr, fdf->win.ptr, fdf->img.ptr, 0, 0);
 		sleep(1);
 		mlx_clear_window(fdf->mlx_ptr, fdf->win.ptr);
 		ft_memset(fdf->img.data, 0, fdf->img.size_line * fdf->img.height);
 	}
-}
-
-
-#include <stdio.h>
-void	draw_box(t_img *img)
-{
-	t_vec2	points[4] = {
-		{0, 0},
-		{0, img->height - 1},
-		{img->width - 1, img->height - 1},
-		{img->width - 1, 0}};
-
-	for (int i = 0; i < 3; i++)
-		draw_line(img, &points[i], &points[i + 1]);
-	draw_line(img, &points[3], &points[0]);
 }
 
 int	min(int a, int b)
@@ -258,9 +243,9 @@ int	main(int argc, char **argv)
 			//t_vec2 projection = isometric_projection(pos, rotated);
 			t_vec2 projection = orthographic_projection(pos, rotated);
 			if (j)
-				draw_line(&fdf.img, &last, &projection);
+				draw_line(&fdf.img, last, projection);
 			if (i)
-				draw_line(&fdf.img, &last_row[j], &projection);
+				draw_line(&fdf.img, last_row[j], projection);
 			last = projection;
 			last_row[j] = last;
 		}
