@@ -1,0 +1,12 @@
+.*
+!.gitignore
+*.xpm
+*.o
+fdf
+fdf_linux
+__MACOSX/
+build/
+minilibx-linux/
+test_maps/
+*.fdf
+fdf_bonus
