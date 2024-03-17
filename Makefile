@@ -2,12 +2,15 @@ FILES		:=	main.c			\
 				parser.c		\
 				utils.c			\
 				draw_line.c		\
+				rotations.c		\
+				projections.c	\
 
 SRC_PATH	:=	src
 SRC			:=	$(addprefix $(SRC_PATH)/,$(FILES))
 
 OBJ_PATH	:=	build
 OBJ			:=	$(addprefix $(OBJ_PATH)/,$(FILES:.c=.o))
+DEPS		:= $(OBJ:.o=.d)
 
 INC_PATH	:=	inc
 CINC		:=	-I. -Iinclude
@@ -29,7 +32,7 @@ CLIB	:=	-L$(FT_PATH) -L$(MLX_PATH) -l$(FT) -l$(MLX) -lXext -lX11 -lm
 .PHONY: all
 all: $(NAME)
 
-$(NAME): $(OBJ) $(MLX_PATH)/lib$(MLX).a $(FT_PATH)/lib$(FT).a
+$(NAME): $(MLX_PATH)/lib$(MLX).a $(FT_PATH)/lib$(FT).a $(OBJ)
 	$(CC) $(CFLAGS) $(GDB) $(CINC) $(OBJ) -o $@ $(CLIB)
 
 $(MLX_PATH)/lib$(MLX).a:
@@ -38,15 +41,18 @@ $(MLX_PATH)/lib$(MLX).a:
 $(FT_PATH)/lib$(FT).a:
 	make -C $(FT_PATH)
 
-$(OBJ_PATH)/%.o: $(SRC_PATH)/%.c | $(OBJ_PATH)
-	$(CC) $(CFLAGS) $(GDB) $(CINC) -c $< -o $@
+-include $(DEPS)
 
-$(OBJPATH):
+$(OBJ_PATH)/%.o: $(SRC_PATH)/%.c | $(OBJ_PATH)
+	$(CC) $(CFLAGS) $(GDB) $(CINC) -MMD -MP -c $< -o $@
+
+$(OBJ_PATH):
 	mkdir -p $@
 
 .PHONY: clean fclean re norm
 clean:
 	rm -f $(OBJ)
+	rm -f $(DEPS)
 
 fclean: clean
 	make clean -C $(MLX_PATH)
